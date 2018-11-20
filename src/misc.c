@@ -29,29 +29,6 @@ void Delay(u32 count)
     }
 }
 
-//The folloiwng code came from: http://notabs.org/winzipcrc/winzipcrc.c
-// C99 winzip crc function, by Scott Duplichan
-//We could use the internal CRC implementation in the STM32, but this is really small
-//and perfomrance isn't really an issue
-u32 Crc(const void *buffer, u32 size)
-{
-   u32 crc = ~0;
-   const u8  *position = buffer;
-
-   while (size--) 
-      {
-      int bit;
-      crc ^= *position++;
-      for (bit = 0; bit < 8; bit++) 
-         {
-         s32 out = crc & 1;
-         crc >>= 1;
-         crc ^= -out & 0xEDB88320;
-         }
-      }
-   return ~crc;
-}
-
 /* Note that the following does no error checking on whether the string
  * is valid utf-8 or even if the length is ok.  Caveat Emptor.
  */
@@ -193,5 +170,94 @@ void USB_Connect()
     wait_press();
     wait_release();
     USB_Disable();
+}
+
+/* The following section containing the FNV hash is in the public domain
+ *
+ * hash_32 - 32 bit Fowler/Noll/Vo hash code
+ *
+ * @(#) $Revision: 5.1 $
+ ***
+ * Fowler/Noll/Vo hash
+ *      http://www.isthe.com/chongo/tech/comp/fnv/index.html
+ *
+ * To use the recommended 32 bit FNV-1 hash, pass FNV1_32_INIT as the
+ * Fnv32_t hashval argument to fnv_32_buf() or fnv_32_str().
+ ***
+ * Please do not copyright this code.  This code is in the public domain.
+ *
+ * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+ * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
+ *
+ * By:
+ *  chongo <Landon Curt Noll> /\oo/\
+ *      http://www.isthe.com/chongo/
+ *
+ */
+
+/*
+ * 32 bit magic FNV-0 and FNV-1 prime
+ */
+#define FNV_32_PRIME ((u32)0x01000193)
+#define FNV1_32_INIT ((u32)0x811c9dc5)
+#define MASK_16 (((u32)1<<16)-1) /* i.e., (u_int32_t)0xffff */
+
+/*
+ * fnv_32 - perform a 32 bit Fowler/Noll/Vo hash on a data
+ *
+ * input:
+ *  str - data to hash
+ *  length - data length
+ *
+ * returns:
+ *  32 bit hash as a static hash type
+ *
+ */
+u32 fnv_32(const u8* data, s32 length)
+{
+    u32 hval = FNV1_32_INIT;
+    /*
+     * FNV-1 hash each octet in the buffer
+     */
+    while ((length < 0 && *data) || (length-- > 0)) {
+
+      /* multiply by the 32 bit FNV magic prime mod 2^32 */
+    #if defined(NO_FNV_GCC_OPTIMIZATION)
+      hval *= FNV_32_PRIME;
+    #else
+      hval += (hval<<1) + (hval<<4) + (hval<<7) + (hval<<8) + (hval<<24);
+    #endif
+
+      /* xor the bottom with the current octet */
+      hval ^= (u32)*data++;
+    }
+
+    /* return our new hash value */
+    return hval;
+}
+
+/*
+ * fnv_16_str - perform a 32 bit Fowler/Noll/Vo hash on a string then fold to 16bit
+ *
+ * input:
+ *  str - string to hash
+ *
+ * returns:
+ *  16 bit hash as a static hash type
+ *
+ */
+u16 fnv_16_str(const char *str)
+{
+    u32 hval = fnv_32((const u8*)str, -1);
+
+    /* fold to 16bits (don't do this if you want 32bits */
+    hval = (hval>>16) ^ (hval & MASK_16);
+    /* return our new hash value */
+    return hval;
 }
 

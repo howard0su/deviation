@@ -198,7 +198,12 @@ void INPUT_CheckChanges(void);
 
 /* Misc */
 void Delay(u32 count);
-u32 Crc(const void *buffer, u32 size);
+
+#define Crc(data, len) fnv_32(data, len)
+
+u16 fnv_16_str(const char *str);
+u32 fnv_32(const u8* data, s32 length);
+
 const char *utf8_to_u32(const char *str, u32 *ch);
 int exact_atoi(const char *str); //Like atoi but will not decode a number followed by non-number
 size_t strlcpy(char* dst, const char* src, size_t bufsize);
