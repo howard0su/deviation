@@ -63,7 +63,7 @@ static u8 hopping_frequency_data[SET_NUM] = {0x1c,0x1b,0x1d,0x11,0x0e,0x0d,0x01,
 
 static const u8  binding_adr_rf[5]={0x32,0xaa,0x45,0x45,0x78};
 
-static u8 *rf_adr_buf;
+static u8 rf_adr_buf[5];
 static u8 rf_adr_buf_data[SET_NUM][5] = {
 	{0xad,0x9a,0xa6,0x69,0xb2},//ansheng
 	{0x92,0x9a,0x9d,0x69,0x99},//dc59
@@ -302,7 +302,9 @@ static void update_lfsr(uint32_t *lfsr, uint8_t b)
 
 static void initialize_tx_id()
 {
-    rf_adr_buf = &rf_adr_buf_data[select_ch_id];
+    u8 i;
+    for(i = 0; i < 5; i++)
+        rf_adr_buf[i] = rf_adr_buf_data[select_ch_id][i];
       
     printf("=2=>H377 : Effective id(rf_adr_buf): 0x%02X(%d), 0x%02X(%d), 0x%02X(%d), 0x%02X(%d), 0x%02X(%d)\r\n",
         rf_adr_buf[0], rf_adr_buf[0], rf_adr_buf[1], rf_adr_buf[1], rf_adr_buf[2], rf_adr_buf[2], rf_adr_buf[3], rf_adr_buf[3], rf_adr_buf[4], rf_adr_buf[4]);

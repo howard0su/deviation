@@ -77,7 +77,7 @@ void PROTOCOL_Init(u8 force)
 {
     if(! force && (proto_state & PROTO_MODULEDLG))
         return;
-    packet[0] = 0; // touch packet to make sure it is refrenced
+    packet[0] = 1; // touch packet to make sure it is refrenced
     PROTOCOL_DeInit();
     PROTOCOL_Load(0);
     proto_state = PROTO_INIT;
