@@ -104,7 +104,7 @@ enum {
     CHANNEL12,      // Y Calibration (Q282)
 };
 
-static u8 packet[Q282_PACKET_SIZE]; // Set to largest packet size
+extern u8 *packet;
 static u8 packet_size;
 static u16 packet_period;
 static u8 phase;

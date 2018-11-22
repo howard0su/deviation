@@ -89,7 +89,7 @@ enum {
 #define PAYLOADSIZE 8       // receive data pipes set to this size, but unused
 #define MAX_PACKET_SIZE 9   // YD717 packets have 8-byte payload, Syma X4 is 9
 
-static u8 packet[MAX_PACKET_SIZE];
+extern u8 *packet;
 static u16 counter;
 static u32 packet_counter;
 static u8 tx_power;

@@ -135,8 +135,8 @@ static inline u8 crtp_create_header(u8 port, u8 channel)
 // supports a total of 12 channels. R,P,Y,T leaves 8 aux channels left
 #define MAX_CPPM_AUX_CHANNELS 8
 
-static u8 tx_payload_len = 0; // Length of the packet stored in tx_packet
-static u8 tx_packet[MAX_PACKET_SIZE]; // For writing Tx payloads
+static u8 tx_payload_len = 0; // Length of the packet stored in packet
+extern u8 *packet; // For writing Tx payloads
 static u8 rx_payload_len = 0; // Length of the packet stored in rx_packet
 static u8 rx_packet[MAX_PACKET_SIZE]; // For reading in ACK payloads
 
@@ -228,7 +228,7 @@ enum {
 #define PACKET_CHKTIME 500      // time to wait if packet not yet acknowledged or timed out    
 
 // Helper for sending a packet
-// Assumes packet data has been put in tx_packet
+// Assumes packet data has been put in packet
 // and tx_payload_len has been set correctly
 static void send_packet()
 {
@@ -238,7 +238,7 @@ static void send_packet()
     NRF24L01_FlushRx();
 
     // Transmit the payload
-    NRF24L01_WritePayload(tx_packet, tx_payload_len);
+    NRF24L01_WritePayload(packet, tx_payload_len);
 
     ++packet_counter;
 
@@ -392,8 +392,8 @@ static void send_crtp_rpyt_packet()
     }
 
     // Construct and send packet
-    tx_packet[0] = crtp_create_header(CRTP_PORT_SETPOINT, 0); // Commander packet to channel 0
-    memcpy(&tx_packet[1], (char*) &cpkt, sizeof(cpkt));
+    packet[0] = crtp_create_header(CRTP_PORT_SETPOINT, 0); // Commander packet to channel 0
+    memcpy(&packet[1], (char*) &cpkt, sizeof(cpkt));
     tx_payload_len = 1 + sizeof(cpkt);
     send_packet();
 }
@@ -444,11 +444,11 @@ static void send_crtp_cppm_emu_packet()
     uint8_t commanderPacketSize = 1 + 8 + (2*numAuxChannels);
 
     // Construct and send packet
-    tx_packet[0] = crtp_create_header(CRTP_PORT_SETPOINT_GENERIC, 0); // Generic setpoint packet to channel 0
-    tx_packet[1] = CRTP_SETPOINT_GENERIC_CPPM_EMU_TYPE;
+    packet[0] = crtp_create_header(CRTP_PORT_SETPOINT_GENERIC, 0); // Generic setpoint packet to channel 0
+    packet[1] = CRTP_SETPOINT_GENERIC_CPPM_EMU_TYPE;
 
     // Copy the header (1) plus 4 2-byte channels (8) plus whatever number of 2-byte aux channels are in use
-    memcpy(&tx_packet[2], (char*)&cpkt, commanderPacketSize);
+    memcpy(&packet[2], (char*)&cpkt, commanderPacketSize);
     tx_payload_len = 2 + commanderPacketSize; // CRTP header, commander type, and packet
     send_packet();
 }
@@ -500,8 +500,8 @@ static u8 crtp_log_setup_state_machine()
         // fallthrough
     case CFLIE_CRTP_LOG_SETUP_STATE_SEND_CMD_GET_INFO:
         crtp_log_setup_state = CFLIE_CRTP_LOG_SETUP_STATE_ACK_CMD_GET_INFO;
-        tx_packet[0] = crtp_create_header(CRTP_PORT_LOG, CRTP_LOG_CHAN_TOC);
-        tx_packet[1] = CRTP_LOG_TOC_CMD_INFO;
+        packet[0] = crtp_create_header(CRTP_PORT_LOG, CRTP_LOG_CHAN_TOC);
+        packet[1] = CRTP_LOG_TOC_CMD_INFO;
         tx_payload_len = 2;
         send_packet();
         break;
@@ -533,9 +533,9 @@ static u8 crtp_log_setup_state_machine()
 
     case CFLIE_CRTP_LOG_SETUP_STATE_SEND_CMD_GET_ITEM:
         crtp_log_setup_state = CFLIE_CRTP_LOG_SETUP_STATE_ACK_CMD_GET_ITEM;
-        tx_packet[0] = crtp_create_header(CRTP_PORT_LOG, CRTP_LOG_CHAN_TOC);
-        tx_packet[1] = CRTP_LOG_TOC_CMD_ELEMENT;
-        tx_packet[2] = next_toc_variable;
+        packet[0] = crtp_create_header(CRTP_PORT_LOG, CRTP_LOG_CHAN_TOC);
+        packet[1] = CRTP_LOG_TOC_CMD_ELEMENT;
+        packet[2] = next_toc_variable;
         tx_payload_len = 3;
         send_packet();
         break;
@@ -604,15 +604,15 @@ static u8 crtp_log_setup_state_machine()
 
     case CFLIE_CRTP_LOG_SETUP_STATE_SEND_CONTROL_CREATE_BLOCK:
         crtp_log_setup_state = CFLIE_CRTP_LOG_SETUP_STATE_ACK_CONTROL_CREATE_BLOCK;
-        tx_packet[0] = crtp_create_header(CRTP_PORT_LOG, CRTP_LOG_CHAN_SETTINGS);
-        tx_packet[1] = CRTP_LOG_SETTINGS_CMD_CREATE_BLOCK;
-        tx_packet[2] = CFLIE_TELEM_LOG_BLOCK_ID; // Log block ID
-        tx_packet[3] = vbat_var_type; // Variable type
-        tx_packet[4] = vbat_var_id; // ID of the VBAT variable
-        tx_packet[5] = extvbat_var_type; // Variable type
-        tx_packet[6] = extvbat_var_id; // ID of the ExtVBat variable
-        tx_packet[7] = rssi_var_type; // Variable type
-        tx_packet[8] = rssi_var_id; // ID of the RSSI variable
+        packet[0] = crtp_create_header(CRTP_PORT_LOG, CRTP_LOG_CHAN_SETTINGS);
+        packet[1] = CRTP_LOG_SETTINGS_CMD_CREATE_BLOCK;
+        packet[2] = CFLIE_TELEM_LOG_BLOCK_ID; // Log block ID
+        packet[3] = vbat_var_type; // Variable type
+        packet[4] = vbat_var_id; // ID of the VBAT variable
+        packet[5] = extvbat_var_type; // Variable type
+        packet[6] = extvbat_var_id; // ID of the ExtVBat variable
+        packet[7] = rssi_var_type; // Variable type
+        packet[8] = rssi_var_id; // ID of the RSSI variable
         tx_payload_len = 9;
         send_packet();
         break;
@@ -642,10 +642,10 @@ static u8 crtp_log_setup_state_machine()
 
     case CFLIE_CRTP_LOG_SETUP_STATE_SEND_CONTROL_START_BLOCK:
         crtp_log_setup_state = CFLIE_CRTP_LOG_SETUP_STATE_ACK_CONTROL_START_BLOCK;
-        tx_packet[0] = crtp_create_header(CRTP_PORT_LOG, CRTP_LOG_CHAN_SETTINGS);
-        tx_packet[1] = CRTP_LOG_SETTINGS_CMD_START_LOGGING;
-        tx_packet[2] = CFLIE_TELEM_LOG_BLOCK_ID; // Log block ID 1
-        tx_packet[3] = CFLIE_TELEM_LOG_BLOCK_PERIOD_10MS; // Log frequency in 10ms units
+        packet[0] = crtp_create_header(CRTP_PORT_LOG, CRTP_LOG_CHAN_SETTINGS);
+        packet[1] = CRTP_LOG_SETTINGS_CMD_START_LOGGING;
+        packet[2] = CFLIE_TELEM_LOG_BLOCK_ID; // Log block ID 1
+        packet[3] = CFLIE_TELEM_LOG_BLOCK_PERIOD_10MS; // Log frequency in 10ms units
         tx_payload_len = 4;
         send_packet();
         break;

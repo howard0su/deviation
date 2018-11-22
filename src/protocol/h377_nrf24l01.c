@@ -63,7 +63,7 @@ static u8 hopping_frequency_data[SET_NUM] = {0x1c,0x1b,0x1d,0x11,0x0e,0x0d,0x01,
 
 static const u8  binding_adr_rf[5]={0x32,0xaa,0x45,0x45,0x78};
 
-static u8 rf_adr_buf[5]; 
+static u8 *rf_adr_buf;
 static u8 rf_adr_buf_data[SET_NUM][5] = {
 	{0xad,0x9a,0xa6,0x69,0xb2},//ansheng
 	{0x92,0x9a,0x9d,0x69,0x99},//dc59
@@ -90,7 +90,7 @@ static u8 bind_buf_arry_data[SET_NUM][4] = {
    
 
 static unsigned int ch_data[8];
-static u8 payload[10];
+extern u8 *packet;
 static u8 counter1ms;
 
 static int select_ch_id = 0;
@@ -150,7 +150,7 @@ static void h377_init()
     NRF24L01_WriteReg(NRF24L01_01_EN_AA, 0x00);      // No Auto Acknoledgement
     NRF24L01_WriteRegisterMulti(NRF24L01_10_TX_ADDR, rf_adr_buf, 5);
     NRF24L01_WriteRegisterMulti(NRF24L01_0A_RX_ADDR_P0, rf_adr_buf, 5);
-    NRF24L01_WriteReg(NRF24L01_11_RX_PW_P0, 10); // payload size = 10
+    NRF24L01_WriteReg(NRF24L01_11_RX_PW_P0, 10); // packet size = 10
     //NRF24L01_WriteReg(NRF24L01_05_RF_CH, 81); // binding packet must be set in channel 81
 	NRF24L01_WriteReg(NRF24L01_05_RF_CH, binding_ch); // binding packet must be set in channel 81
 
@@ -193,24 +193,24 @@ static void build_ch_data()
                 ch_data[i] = (unsigned int)temp;
         }
 
-        payload[i] = (u8)ch_data[i];
+        packet[i] = (u8)ch_data[i];
     }
 
-    payload[8]  = (u8)((ch_data[0]>>8)&0x0003);
-    payload[8] |= (u8)((ch_data[1]>>6)&0x000c);
-    payload[8] |= (u8)((ch_data[2]>>4)&0x0030);
-    payload[8] |= (u8)((ch_data[3]>>2)&0x00c0);
+    packet[8]  = (u8)((ch_data[0]>>8)&0x0003);
+    packet[8] |= (u8)((ch_data[1]>>6)&0x000c);
+    packet[8] |= (u8)((ch_data[2]>>4)&0x0030);
+    packet[8] |= (u8)((ch_data[3]>>2)&0x00c0);
 
-    payload[9]  = (u8)((ch_data[4]>>8)&0x0003);
-    payload[9] |= (u8)((ch_data[5]>>6)&0x000c);
-    payload[9] |= (u8)((ch_data[6]>>4)&0x0030);
-    payload[9] |= (u8)((ch_data[7]>>2)&0x00c0);
+    packet[9]  = (u8)((ch_data[4]>>8)&0x0003);
+    packet[9] |= (u8)((ch_data[5]>>6)&0x000c);
+    packet[9] |= (u8)((ch_data[6]>>4)&0x0030);
+    packet[9] |= (u8)((ch_data[7]>>2)&0x00c0);
 
 #ifdef EMULATOR
     for (i = 0; i < 8; i++)
-        printf("=>H377 : ch[%d]=%d,  payload[%d]=%d\n", i, ch_data[i], i, payload[i]);
-    printf("=>H377 : payload[8]=%d\n", payload[8]);
-    printf("=>H377 : payload[9]=%d\n", payload[9]);
+        printf("=>H377 : ch[%d]=%d,  packet[%d]=%d\n", i, ch_data[i], i, packet[i]);
+    printf("=>H377 : packet[8]=%d\n", packet[8]);
+    printf("=>H377 : packet[9]=%d\n", packet[9]);
 #endif
 
 }
@@ -276,7 +276,7 @@ static u16 h377_cb()
     else if(counter1ms>8)
     {
         counter1ms = 0;
-        NRF24L01_WritePayload(payload,10);
+        NRF24L01_WritePayload(packet,10);
     }
 #ifdef EMULATOR
     return 100;
@@ -302,9 +302,7 @@ static void update_lfsr(uint32_t *lfsr, uint8_t b)
 
 static void initialize_tx_id()
 {
-	u8 i;
-	for(i=0;i<5;i++)
-      rf_adr_buf[i] = rf_adr_buf_data[select_ch_id][i];    
+    rf_adr_buf = &rf_adr_buf_data[select_ch_id];
       
     printf("=2=>H377 : Effective id(rf_adr_buf): 0x%02X(%d), 0x%02X(%d), 0x%02X(%d), 0x%02X(%d), 0x%02X(%d)\r\n",
         rf_adr_buf[0], rf_adr_buf[0], rf_adr_buf[1], rf_adr_buf[1], rf_adr_buf[2], rf_adr_buf[2], rf_adr_buf[3], rf_adr_buf[3], rf_adr_buf[4], rf_adr_buf[4]);

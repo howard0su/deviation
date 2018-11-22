@@ -219,7 +219,7 @@ static void processCrossfireTelemetryData(u8 data, u8 status) {
 }
 #endif  // HAS_EXTENDED_TELEMETRY
 
-static u8 packet[CRSF_PACKET_SIZE];
+extern u8 *packet;
 
 
 

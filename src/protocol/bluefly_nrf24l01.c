@@ -61,10 +61,10 @@ static const u8  binding_adr_rf[TXID_SIZE]={0x32,0xaa,0x45,0x45,0x78}; // fixed 
 // rf_adr_buf can be used for fixed id
 static u8 rf_adr_buf[TXID_SIZE]; // ={0x13,0x88,0x46,0x57,0x76};
 
-static u8 bind_payload[PAYLOAD_SIZE];
+static u8 bind_packet[PAYLOAD_SIZE];
 
 static unsigned int ch_data[8];
-static u8 payload[PAYLOAD_SIZE];
+extern u8 *packet;
 static u8 counter1ms;
 
 
@@ -82,9 +82,9 @@ static void build_binding_packet(void)
 {
     int i;
     for (i = 0; i < TXID_SIZE; ++i)
-      bind_payload[i] = rf_adr_buf[i];
-    bind_payload[i++] = hopping_frequency_start;
-    for (; i < PAYLOAD_SIZE; ++i) bind_payload[i] = 0x55;
+      bind_packet[i] = rf_adr_buf[i];
+    bind_packet[i++] = hopping_frequency_start;
+    for (; i < PAYLOAD_SIZE; ++i) bind_packet[i] = 0x55;
 }
 
 static void bluefly_init()
@@ -95,7 +95,7 @@ static void bluefly_init()
     NRF24L01_WriteReg(NRF24L01_01_EN_AA, 0x00);      // No Auto Acknoledgement
     NRF24L01_WriteRegisterMulti(NRF24L01_10_TX_ADDR, rf_adr_buf, 5);
     NRF24L01_WriteRegisterMulti(NRF24L01_0A_RX_ADDR_P0, rf_adr_buf, 5);
-    NRF24L01_WriteReg(NRF24L01_11_RX_PW_P0, PAYLOAD_SIZE); // payload size = 12
+    NRF24L01_WriteReg(NRF24L01_11_RX_PW_P0, PAYLOAD_SIZE); // packet size = 12
     NRF24L01_WriteReg(NRF24L01_05_RF_CH, 81); // binding packet must be set in channel 81
 
     // 2-bytes CRC, radio on
@@ -129,23 +129,23 @@ static void build_ch_data()
                 ch_data[i] = (unsigned int)temp;
         }
 
-        payload[i] = (u8)ch_data[i];
+        packet[i] = (u8)ch_data[i];
     }
 
-    payload[8]  = (u8)((ch_data[0]>>8)&0x0003);
-    payload[8] |= (u8)((ch_data[1]>>6)&0x000c);
-    payload[8] |= (u8)((ch_data[2]>>4)&0x0030);
-    payload[8] |= (u8)((ch_data[3]>>2)&0x00c0);
+    packet[8]  = (u8)((ch_data[0]>>8)&0x0003);
+    packet[8] |= (u8)((ch_data[1]>>6)&0x000c);
+    packet[8] |= (u8)((ch_data[2]>>4)&0x0030);
+    packet[8] |= (u8)((ch_data[3]>>2)&0x00c0);
 
-    payload[9]  = (u8)((ch_data[4]>>8)&0x0003);
-    payload[9] |= (u8)((ch_data[5]>>6)&0x000c);
-    payload[9] |= (u8)((ch_data[6]>>4)&0x0030);
-    payload[9] |= (u8)((ch_data[7]>>2)&0x00c0);
+    packet[9]  = (u8)((ch_data[4]>>8)&0x0003);
+    packet[9] |= (u8)((ch_data[5]>>6)&0x000c);
+    packet[9] |= (u8)((ch_data[6]>>4)&0x0030);
+    packet[9] |= (u8)((ch_data[7]>>2)&0x00c0);
 
     unsigned char l, h, t;
     l = h = 0xff;
     for (int i=0; i<10; ++i) {
-        h ^= payload[i];
+        h ^= packet[i];
         h ^= h >> 4;
         t = h;
         h = l;
@@ -156,13 +156,13 @@ static void build_ch_data()
         l ^= ((t<<1) | (t>>7)) & 0xe0;
     }
     // Checksum
-    payload[10] = h; 
-    payload[11] = l;
+    packet[10] = h; 
+    packet[11] = l;
 #ifdef EMULATOR
     for (i = 0; i < 8; i++)
-        printf("ch[%d]=%d,  payload[%d]=%d\n", i, ch_data[i], i, payload[i]);
-    printf("payload[8]=%d\n", payload[8]);
-    printf("payload[9]=%d\n", payload[9]);
+        printf("ch[%d]=%d,  packet[%d]=%d\n", i, ch_data[i], i, packet[i]);
+    printf("packet[8]=%d\n", packet[8]);
+    printf("packet[9]=%d\n", packet[9]);
 #endif
 }
 
@@ -180,7 +180,7 @@ static u16 bluefly_cb()
         hopping_frequency_no++;
         hopping_frequency_no %= 15;
         NRF24L01_FlushTx();
-        NRF24L01_WritePayload(payload, PAYLOAD_SIZE);
+        NRF24L01_WritePayload(packet, PAYLOAD_SIZE);
         break;
     case 2:
         break;
@@ -193,7 +193,7 @@ static u16 bluefly_cb()
             NRF24L01_WriteRegisterMulti(NRF24L01_10_TX_ADDR, binding_adr_rf, 5);
             NRF24L01_WriteReg(NRF24L01_05_RF_CH, 81);
             NRF24L01_FlushTx();
-            NRF24L01_WritePayload(bind_payload, PAYLOAD_SIZE);
+            NRF24L01_WritePayload(bind_packet, PAYLOAD_SIZE);
         }
         break;
     case 4:

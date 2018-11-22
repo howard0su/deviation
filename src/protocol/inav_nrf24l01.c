@@ -233,7 +233,7 @@ enum {
 
 static u32 lost_packet_counter;
 static u32 packet_counter;
-static u8 packet[INAV_PROTOCOL_PAYLOAD_SIZE_MAX];
+extern u8 *packet;
 static u8 payload_size;
 
 #define RC_CHANNEL_COUNT_MIN         6

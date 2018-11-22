@@ -175,7 +175,7 @@ static const char * const KN_PROTOCOL_OPTIONS[] = {
 };
  
 //Payload data buffer
-static u8 packet_[PAYLOADSIZE];
+extern u8 *packet;
 static u8 hopping_channels_[RF_CH_COUNT];
 
 static u16 sending_packet_period;
@@ -271,7 +271,7 @@ static s32 rf_ch_idx = 0;
     switch(tx_state_)
     {
     case STATE_PRE_BIND:
-        kn_bind_init(tx_addr_, hopping_channels_, packet_);
+        kn_bind_init(tx_addr_, hopping_channels_, packet);
         tx_state_ = STATE_BINDING;
         packet_sent = 0;
         //Do once, no break needed
@@ -279,7 +279,7 @@ static s32 rf_ch_idx = 0;
         if(packet_sent < bind_count)
         {
             packet_sent++;
-            kn_send_packet(packet_, NO_RF_CHANNEL_CHANGE);
+            kn_send_packet(packet, NO_RF_CHANNEL_CHANGE);
             return BINDING_PACKET_PERIOD;
         } else {
             //Tell foreground interface binding is done
@@ -290,7 +290,7 @@ static s32 rf_ch_idx = 0;
         }
     case STATE_PRE_SEND:
             packet_sent = 0;
-            kn_send_init(tx_addr_, packet_);
+            kn_send_init(tx_addr_, packet);
             rf_ch_idx = 0;
             tx_state_ = STATE_SENDING;
            //Do once, no break needed
@@ -300,11 +300,11 @@ static s32 rf_ch_idx = 0;
             packet_sent = 0;
             rf_ch_idx++;
             if(rf_ch_idx >= RF_CH_COUNT) rf_ch_idx = 0;
-            kn_update_packet_control_data(packet_, 0, rf_ch_idx);
-            kn_send_packet(packet_, hopping_channels_[rf_ch_idx]);
+            kn_update_packet_control_data(packet, 0, rf_ch_idx);
+            kn_send_packet(packet, hopping_channels_[rf_ch_idx]);
         } else {
-            kn_update_packet_send_count(packet_, packet_sent, rf_ch_idx);
-            kn_send_packet(packet_, NO_RF_CHANNEL_CHANGE);
+            kn_update_packet_send_count(packet, packet_sent, rf_ch_idx);
+            kn_send_packet(packet, NO_RF_CHANNEL_CHANGE);
         }
         packet_sent++;
         return sending_packet_period;
@@ -498,7 +498,7 @@ static void kn_bind_init(u8 tx_addr[], u8 hopping_ch[], u8 bind_packet[])
     bind_packet[15] = (Model.proto_opts[PROTOOPTS_USE1MBPS] == USE1MBPS_YES) ? 0x01 : 0x00;
  
     //Set address and RF channel and send the first packet
-    kn_send_packet(packet_, 83);
+    kn_send_packet(packet, 83);
 }
  
 static void kn_send_packet(u8 packet[], s32 rf_ch)

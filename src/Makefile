@@ -106,7 +106,7 @@ SRC_C    +=  $(wildcard *.c) $(wildcard screen/*.c) $(wildcard screen/$(SCREENSI
              $(wildcard gui/*.c) $(wildcard pages/$(SCREENSIZE)/*.c) $(wildcard config/*.c)
 
 ifdef MODULAR
-   SRC_C    += protocol/protocol.c
+   SRC_C    += protocol/protocol.c protocol/shared.c
    PROTO_SRC_C := $(filter-out protocol/protocol.c, $(wildcard protocol/*.c) $(wildcard protocol/spi/*.c))
 else
    SRC_C    := $(SRC_C) $(wildcard protocol/*.c) $(wildcard protocol/spi/*.c)

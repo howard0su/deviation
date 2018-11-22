@@ -45,7 +45,7 @@ static const u8 A7105_regs[] = {
 };
 
 static u32 id;
-static u8 packet[16];
+extern u8 *packet;
 static u8 counter;
 static u8 next_ch;
 static u8 tx_power;

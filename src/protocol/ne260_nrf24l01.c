@@ -182,7 +182,7 @@ uint8_t		neChannel = 10;
 uint8_t		neChannelOffset = 0;
 #define PACKET_LENGTH	7
 
-static u8 packet[20];
+extern u8 *packet;
 static u32 state;
 static u32 bind_count;
 static u16 model_id = 0xA04A;

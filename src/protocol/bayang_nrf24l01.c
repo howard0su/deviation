@@ -124,7 +124,7 @@ ctassert(LAST_PROTO_OPT <= NUM_PROTO_OPTS, too_many_protocol_opts);
 static u16 counter;
 static u8 phase;
 static u8 telemetry;
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 static u8 tx_power;
 static u8 txid[3];
 static u8 bind_chan;

@@ -73,7 +73,7 @@ enum {
 #define USE_FIXED_MFGID
 #endif
 
-static u8 packet[SLT_PAYLOADSIZE_V2];
+extern u8 *packet;
 static u8 rf_channels[SLT_NFREQCHANNELS];
 static u8 packet_sent;
 static u8 tx_id[SLT_TXID_SIZE];

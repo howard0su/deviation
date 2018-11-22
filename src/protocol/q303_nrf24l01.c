@@ -54,7 +54,7 @@
 #define INITIAL_WAIT          500
 #define RF_BIND_CHANNEL      0x02
 
-static u8 packet[11];
+extern u8 *packet;
 static u8 phase;
 static u16 bind_counter;
 static u32 packet_counter;

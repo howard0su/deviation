@@ -114,7 +114,7 @@ static u8 phase;
 static u8 tx_power;
 static u8 rf_chan; 
 static u8 txid[3];
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 static u8 rf_channels[RF_NUM_CHANNELS]; 
 
 // haven't figured out txid<-->rf channel mapping for MJX models

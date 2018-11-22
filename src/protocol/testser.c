@@ -32,7 +32,7 @@
 #endif
 
 #define TESTSER_PACKET_SIZE 64
-static u8 packet[TESTSER_PACKET_SIZE];
+extern u8 *packet;
 static volatile u32 packet_idx;
 static s16 speed, databits, parity, stopbits, duplex;
 

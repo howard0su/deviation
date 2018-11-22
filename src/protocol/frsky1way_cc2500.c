@@ -49,7 +49,7 @@ enum {
 };
 ctassert(LAST_PROTO_OPT <= NUM_PROTO_OPTS, too_many_protocol_opts);
 
-static u8 packet[16];
+extern u8 *packet;
 static u32 state;
 static u32 seed;
 static u32 fixed_id;

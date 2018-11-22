@@ -103,7 +103,7 @@ static u8 rx_tx_addr[5];
 static u32 packet_count;
 static u8 hopping_frequency_no;
 static u8 tx_power;
-static u8 packet[32];
+extern u8 *packet;
 
 // Bit vector from bit position
 #define _BV(bit) (1 << bit)

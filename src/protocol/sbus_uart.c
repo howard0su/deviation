@@ -37,7 +37,7 @@
 #define SBUS_CHANNELS             16
 #define SBUS_PACKET_SIZE          25
 
-static u8 packet[SBUS_PACKET_SIZE];
+extern u8 *packet;
 
 //#define STICK_SCALE    869  // full scale at +-125
 #define STICK_SCALE    800  // +/-100 gives 2000/1000 us

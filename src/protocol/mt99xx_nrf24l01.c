@@ -143,7 +143,7 @@ enum {
     PROTOOPTS_FORMAT_FY805,
 };
 
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 static u16 bind_counter;
 static u8 tx_power;
 static u8 txid[2];

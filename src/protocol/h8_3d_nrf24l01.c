@@ -129,7 +129,7 @@ enum {
 static u16 counter;
 static u8 phase;
 static u16 packet_period;
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 static u8 tx_power;
 static u8 txid[4];
 static u8 rf_chan; 

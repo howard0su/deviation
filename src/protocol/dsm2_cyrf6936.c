@@ -175,14 +175,14 @@ static const u8 ch_map12[] = {1, 5, 2, 4, 6, 10, 0xff,    0, 7, 3, 8, 9, 11, 0xf
 static const u8 ch_map14[] = {1, 5, 2, 3, 4,  6,    8,    1, 5, 2, 3, 0,  7,    9};
 #endif
 
-u8 packet[16];
-u8 channels[23];
-u8 chidx;
-u8 sop_col;
-u8 data_col;
-u16 state;
-u8 crcidx;
-u8 binding;
+extern u8 *packet;
+static u8 channels[23];
+static u8 chidx;
+static u8 sop_col;
+static u8 data_col;
+static u16 state;
+static u8 crcidx;
+static u8 binding;
 
 #ifdef USE_FIXED_MFGID
     //static const u8 cyrfmfg_id[6] = {0x5e, 0x28, 0xa3, 0x1b, 0x00, 0x00}; //dx8

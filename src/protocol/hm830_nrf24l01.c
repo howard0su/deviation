@@ -124,7 +124,7 @@ static const u8 init_vals[][2] = {
     {NRF24L01_00_CONFIG,      0x0E},
 };
 
-static u8 packet[7];
+extern u8 *packet;
 static s8 count;
 static u8 phase;
 static const u8 rf_ch[]     = {0x08, 0x35, 0x12, 0x3f, 0x1c, 0x49, 0x26};

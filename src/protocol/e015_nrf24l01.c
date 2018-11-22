@@ -58,7 +58,7 @@
 
 static const u8 bind_address[ADDRESS_LENGTH] = {0x62, 0x54, 0x79, 0x38, 0x53};
 static u8 tx_addr[ADDRESS_LENGTH];
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 static u8 phase;
 static u16 bind_counter;
 static u8 tx_power;

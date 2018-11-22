@@ -99,7 +99,7 @@ static const u8 sopcodes[][8] = {
 static s16 bind_counter;
 static enum PktState state;
 static u8 txState;
-static u8 packet[16];
+extern u8 *packet;
 static u32 fixed_id;
 static u8 radio_ch[5];
 static u8 *radio_ch_ptr;

@@ -60,7 +60,7 @@
 static const u8 bind_address[ADDRESS_LENGTH] = {0x55,0x42,0x9C,0x8F,0xC9};
 static u8 tx_addr[ADDRESS_LENGTH];
 static u8 rf_chans[NUM_RF_CHANNELS];
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 static u8 phase;
 static u16 bind_counter;
 static u8 tx_power;

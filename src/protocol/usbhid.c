@@ -38,8 +38,8 @@
     #error "USBHID_DIGITAL_CHANNELS must be <= 8"
 #endif
 //if sizeof(packet) changes, must change wMaxPacketSize to match in Joystick_ConfigDescriptor
-static s8 packet[USBHID_ANALOG_CHANNELS + 1];
-u8 num_channels;
+extern u8 *packet;
+static u8 num_channels;
 volatile u8 PrevXferComplete;
 extern void HID_Write(s8 *packet, u8 num_channels);
 
@@ -75,7 +75,7 @@ static u16 usbhid_cb()
     if(PrevXferComplete) {
         build_data_pkt();
         
-        HID_Write(packet, sizeof(packet));
+        HID_Write((s8*)packet, USBHID_ANALOG_CHANNELS + 1);
     }
     return 50000;
 }

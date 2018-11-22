@@ -99,7 +99,7 @@ enum {
 
 #define PAYLOADSIZE 16
 
-static u8 packet[PAYLOADSIZE];
+extern u8 *packet;
 static u8 packet_sent;
 static u8 tx_id[3];
 static u8 rf_ch_num;
@@ -458,7 +458,7 @@ static void send_packet(u8 bind)
     //  Serial.print(rf_ch); Serial.write("\n");
     NRF24L01_WriteReg(NRF24L01_05_RF_CH, rf_ch);
     NRF24L01_FlushTx();
-    NRF24L01_WritePayload(packet, sizeof(packet));
+    NRF24L01_WritePayload(packet, PAYLOADSIZE);
     ++packet_counter;
     packet_sent = 1;
 //    radio.ce(HIGH);

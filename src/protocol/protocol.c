@@ -42,6 +42,7 @@ static const u8 AETRG[PROTO_MAP_LEN] =
 
 static u8 proto_state;
 static u32 bind_time;
+extern u8 *packet;
 #define PROTO_DEINIT    0x00
 #define PROTO_INIT      0x01
 #define PROTO_READY     0x02
@@ -76,6 +77,7 @@ void PROTOCOL_Init(u8 force)
 {
     if(! force && (proto_state & PROTO_MODULEDLG))
         return;
+    packet[0] = 0; // touch packet to make sure it is refrenced
     PROTOCOL_DeInit();
     PROTOCOL_Load(0);
     proto_state = PROTO_INIT;

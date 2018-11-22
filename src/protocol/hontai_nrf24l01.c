@@ -115,7 +115,7 @@ enum {
 };
 
 static u8 phase;
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 static u8 tx_power;
 static u8 txid[5];
 static u8 rf_chan = 0; 

@@ -70,7 +70,7 @@ static u8  rx_tx_addr[CORONA_ADDRESS_LENGTH];
 static u8  hopping_frequency[CORONA_RF_NUM_CHANNELS+1];
 static u8  hopping_frequency_no;
 static u16 bind_counter;
-static u8  packet[40];
+extern u8 *packet;
 static u16 state;
 static s8  fine;
 static u8  fdv3_id_send;

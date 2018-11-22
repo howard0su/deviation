@@ -81,7 +81,7 @@ enum {
 #define PAYLOADSIZE 10       // receive data pipes set to this size, but unused
 #define MAX_PACKET_SIZE 16   // X11,X12,X5C-1 10-byte, X5C 16-byte
 
-static u8 packet[MAX_PACKET_SIZE];
+extern u8 *packet;
 static u8 packet_size;
 static u16 counter;
 static u32 packet_counter;

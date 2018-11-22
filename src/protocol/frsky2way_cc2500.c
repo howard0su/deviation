@@ -56,7 +56,9 @@ ctassert(LAST_PROTO_OPT <= NUM_PROTO_OPTS, too_many_protocol_opts);
 
 #define TELEM_ON 0
 #define TELEM_OFF 1
-static u8 packet[40];
+#define PACKET_SIZE 40
+
+extern u8 *packet;
 static u32 state;
 static u8 counter;
 static u32 fixed_id;
@@ -380,7 +382,7 @@ static u16 frsky2way_cb()
     } else {
         if (state == FRSKY_DATA1) {
             unsigned len = CC2500_ReadReg(CC2500_3B_RXBYTES | CC2500_READ_BURST);
-            if (len && len < sizeof(packet)) {
+            if (len && len < PACKET_SIZE) {
                 CC2500_ReadData(packet, len);
                 frsky2way_parse_telem(packet, len);
             }

@@ -93,7 +93,7 @@ static enum {
 } state;
 
 static u16 fixed_id;
-static u8 packet[MAX_PACKET_SIZE];
+extern u8 *packet;
 
 static const u8 hop_data[] = {
   0x02, 0xD4, 0xBB, 0xA2, 0x89,

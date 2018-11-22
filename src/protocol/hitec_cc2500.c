@@ -85,7 +85,7 @@ static u8  bind_in_progress;
 static u8  bind_phase;
 static u8  hopping_frequency[50];
 static u8  hopping_frequency_no;
-static u8  packet[40];
+extern u8  *packet;
 static u8 calData[48];
 static u8  rf_ch_num;
 #define MAX_PKT 29

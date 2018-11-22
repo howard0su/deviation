@@ -36,7 +36,7 @@
 
 #include "iface_cc2500.h"
 
-static u8 packet[20];
+extern u8 *packet;
 static u32 state;
 static u32 fixed_id;
 static u32 bind_count;

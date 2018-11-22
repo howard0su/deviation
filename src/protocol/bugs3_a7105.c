@@ -262,7 +262,7 @@ typedef struct {
 } radio_data_t;
 
 static radio_data_t radio_data;
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 static u8 channel_idx;
 static u8 state;
 static u8 packet_count;
@@ -464,7 +464,7 @@ static void build_packet(u8 bind) {
     u16 throttle = get_channel(CHANNEL3,  400, 400, 400);
     u16 rudder   = get_channel(CHANNEL4, -400, 400, 400);
 
-    memset(packet, 0, sizeof(packet));
+    memset(packet, 0, PACKET_SIZE);
     packet[1] = 0x76;   // txid (rx uses to know hopping frequencies)
     packet[2] = 0x71;
     packet[3] = 0x94;

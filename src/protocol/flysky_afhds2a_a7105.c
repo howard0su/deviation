@@ -40,7 +40,7 @@
 #define TXID_SIZE     4
 #define RXID_SIZE     4
 
-static u8 packet[TXPACKET_SIZE];
+extern u8 *packet;
 static u8 txid[TXID_SIZE];
 static u8 rxid[RXID_SIZE];
 static u8 hopping_frequency[NUMFREQ];

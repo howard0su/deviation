@@ -41,15 +41,14 @@
 #define WFLY_NUM_FREQUENCE 4
 #define WFLY_BIND_CHANNEL 0x09
 
-u8 packet[PACKET_LENGTH];
-u8 pkt[PACKET_LENGTH];
-u8 rx_tx_addr[5];
-u8 hopping_frequency[WFLY_NUM_FREQUENCE];
-u8 rf_ch_num;
-u32 bind_counter;
-u32 packet_count;
-u8 phase;
-u8 tx_power;
+extern u8 *packet;
+static u8 rx_tx_addr[5];
+static u8 hopping_frequency[WFLY_NUM_FREQUENCE];
+static u8 rf_ch_num;
+static u32 bind_counter;
+static u32 packet_count;
+static u8 phase;
+static u8 tx_power;
 
 enum {
     WFLY_BIND_TX=0,
@@ -230,6 +229,7 @@ u16 WFLY_callback()
                 len=CYRF_ReadRegister(CYRF_09_RX_COUNT);
                 if(len==0x10)
                 {
+                    u8 pkt[PACKET_LENGTH];
                     CYRF_ReadDataPacketLen(pkt, len);
                     for(u8 i=0;i<0x0F;i++)
                     {

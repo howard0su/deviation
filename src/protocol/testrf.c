@@ -49,7 +49,8 @@ enum {
 ctassert(LAST_PROTO_OPT <= NUM_PROTO_OPTS, too_many_protocol_opts);
 
 //if sizeof(packet) changes, must change wMaxPacketSize to match in Joystick_ConfigDescriptor
-static unsigned char packet[16];
+extern u8 *packet;
+#define SIZEOF_PACKET 16
 #define BV(bit) (1 << bit)
 
 MODULE_CALLTYPE
@@ -282,12 +283,12 @@ static void init_nrf()
         NRF24L01_0D_RX_ADDR_P3,  0xC4,
         NRF24L01_0E_RX_ADDR_P4,  0xC5,
         NRF24L01_0F_RX_ADDR_P5,  0xC6,
-        NRF24L01_11_RX_PW_P0,    sizeof(packet), // bytes of data payload for pipe 1
-        NRF24L01_12_RX_PW_P1,    sizeof(packet),
-        NRF24L01_13_RX_PW_P2,    sizeof(packet),
-        NRF24L01_14_RX_PW_P3,    sizeof(packet),
-        NRF24L01_15_RX_PW_P4,    sizeof(packet),
-        NRF24L01_16_RX_PW_P5,    sizeof(packet),
+        NRF24L01_11_RX_PW_P0,    SIZEOF_PACKET, // bytes of data payload for pipe 1
+        NRF24L01_12_RX_PW_P1,    SIZEOF_PACKET,
+        NRF24L01_13_RX_PW_P2,    SIZEOF_PACKET,
+        NRF24L01_14_RX_PW_P3,    SIZEOF_PACKET,
+        NRF24L01_15_RX_PW_P4,    SIZEOF_PACKET,
+        NRF24L01_16_RX_PW_P5,    SIZEOF_PACKET,
         NRF24L01_17_FIFO_STATUS, 0x00,        // Just in case, no real bits to write here
         NRF24L01_1C_DYNPD,       0x3F,        // Enable dynamic payload length on all pipes
     };

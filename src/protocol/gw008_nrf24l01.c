@@ -54,7 +54,7 @@
 #define RF_BIND_CHANNEL 2
 #define PAYLOAD_SIZE    15
 
-static u8 packet[PAYLOAD_SIZE];
+extern u8 *packet;
 static u8 rf_chans[4];
 static u8 current_chan;
 static u8 phase;

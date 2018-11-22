@@ -60,7 +60,7 @@
 #define DM002_NUM_RF_CHANNEL    4
 #define DM002_ADDRESS_SIZE      5
 
-static u8 packet[DM002_PACKET_SIZE];
+extern u8 *packet;
 static u8 hopping_frequency[DM002_NUM_RF_CHANNEL];
 static u8 hopping_frequency_no;
 static u8 rx_tx_addr[DM002_ADDRESS_SIZE];

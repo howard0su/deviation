@@ -154,7 +154,7 @@ static const char * const ESKY2_PROTOCOL_OPTIONS[] = {
 };
  
 //Payload data buffer
-static u8 packet_[PAYLOADSIZE];
+extern u8 *packet;
 
 static u8 hopping_channels_[RF_CH_COUNT];
  
@@ -233,7 +233,7 @@ static s32 rf_ch_idx = 0;
     switch(tx_state_)
     {
     case STATE_PRE_BIND:
-        esky2_bind_init(tx_addr_, packet_);
+        esky2_bind_init(tx_addr_, packet);
         tx_state_ = STATE_BINDING;
         packet_sent = 0;
         //Do once, no break needed
@@ -241,7 +241,7 @@ static s32 rf_ch_idx = 0;
         if(packet_sent < BIND_COUNT)
         {
             packet_sent++;
-            esky2_send_packet(packet_, NO_RF_CHANNEL_CHANGE);
+            esky2_send_packet(packet, NO_RF_CHANNEL_CHANGE);
             return BINDING_PACKET_PERIOD;
         } else {
             //Tell foreground interface binding is done
@@ -252,7 +252,7 @@ static s32 rf_ch_idx = 0;
         }
     case STATE_PRE_SEND:
             packet_sent = 0;
-            esky2_send_init(tx_addr_, packet_);
+            esky2_send_init(tx_addr_, packet);
             rf_ch_idx = 0;
             tx_state_ = STATE_SENDING;
            //Do once, no break needed
@@ -262,10 +262,10 @@ static s32 rf_ch_idx = 0;
             packet_sent = 0;
             rf_ch_idx++;
             if(rf_ch_idx >= RF_CH_COUNT) rf_ch_idx = 0;
-            esky2_update_packet_control_data(packet_, hopping_channels_);
-            esky2_send_packet(packet_, hopping_channels_[rf_ch_idx]);
+            esky2_update_packet_control_data(packet, hopping_channels_);
+            esky2_send_packet(packet, hopping_channels_[rf_ch_idx]);
         } else {
-            esky2_send_packet(packet_, NO_RF_CHANNEL_CHANGE);
+            esky2_send_packet(packet, NO_RF_CHANNEL_CHANGE);
         }
         packet_sent++;
         return SENDING_PACKET_PERIOD;
@@ -445,7 +445,7 @@ static void esky2_bind_init(u8 tx_addr[], u8 bind_packet[])
     bind_packet[14] = 0;
  
     //Send the first packet
-    esky2_send_packet(packet_, 1);
+    esky2_send_packet(packet, 1);
 }
  
 static void esky2_send_packet(u8 packet[], s32 rf_ch)

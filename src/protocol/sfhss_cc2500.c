@@ -56,7 +56,7 @@ ctassert(LAST_PROTO_OPT <= NUM_PROTO_OPTS, too_many_protocol_opts);
 #define PACKET_LEN 13
 #define TX_ID_LEN   2
 
-static u8 packet[PACKET_LEN];
+extern u8 *packet;
 static u32 state;
 static u8 rf_chan;
 static u8 fhss_code; // 0-27
@@ -263,7 +263,7 @@ static void build_data_packet()
 static void send_packet()
 {
     tune_chan_fast();
-    CC2500_WriteData(packet, sizeof(packet));
+    CC2500_WriteData(packet, PACKET_LEN);
 }
 
 

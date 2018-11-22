@@ -96,7 +96,7 @@ enum {
 static u8 bind_counter;
 static u8 phase;
 static u8 tx_power;
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 
 // frequency channel management
 #define RF_BIND_CHANNEL    0x17

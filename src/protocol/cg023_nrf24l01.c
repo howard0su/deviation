@@ -117,7 +117,7 @@ enum {
     CG023_DATA
 };
 
-static u8 packet[PACKET_SIZE];
+extern u8 *packet;
 static u16 counter;
 static u8 tx_power;
 static u8 txid[2];

@@ -125,7 +125,7 @@ enum {
 };
 
 static u32 id;
-static u8 packet[21];
+extern u8 *packet;
 static u16 counter;
 static u16 packet_period;
 static u8 hopping_frequency[16];

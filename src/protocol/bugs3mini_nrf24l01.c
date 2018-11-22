@@ -52,7 +52,7 @@
 #define NUM_RF_CHANNELS 15
 #define ADDRESS_SIZE    5
 
-static u8 packet[TX_PAYLOAD_SIZE];
+extern u8 *packet;
 static u8 current_chan;
 static u8 rx_tx_addr[ADDRESS_SIZE];
 static u8 phase;
@@ -423,7 +423,7 @@ static void initialize(u8 bind)
 {
     CLOCK_StopTimer();
     initialize_txid();
-    memset(packet, (u8)0, sizeof(packet));
+    memset(packet, (u8)0, TX_PAYLOAD_SIZE);
     bugs3mini_init();
     if(bind) {
         phase = BIND1;

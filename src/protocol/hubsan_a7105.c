@@ -151,7 +151,7 @@ enum {
 #define ID_NORMAL 0x55201041 // H102D, H107/L/C/D, H301, H501S
 #define ID_PLUS   0xAA201041 // H107P/C+/D+
 
-static u8 packet[16];
+extern u8 *packet;
 static u8 channel;
 static s16 vtx_freq;
 static const u8 allowed_ch[] = {0x14, 0x1e, 0x28, 0x32, 0x3c, 0x46, 0x50, 0x5a, 0x64, 0x6e, 0x78, 0x82};
