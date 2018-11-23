@@ -14,23 +14,77 @@ main();
 sub main {
     my $out = "bdf_font";
     my $mode = "export";
+    my $filter;
     GetOptions("out=s" => \$out,
                "debug=i" => \$debug,
                "mode=s" => \$mode,
                "minspace=i" => \$minspace, 
-               "maxsize=i" => \$maxsize);
+               "maxsize=i" => \$maxsize,
+               "filter=s" => \$filter);
+
     my $char = read_bdf(shift @ARGV);
+
+    if ($filter ne "")
+    {
+        my $filters = read_filter($filter);
+        my %newchar;
+        foreach my $c (sort {$a <=> $b} keys %$filters) {
+            if (exists($char->{$c}))
+            {
+                my $v = $char->{$c};
+                $newchar{$c} = $v;
+            }
+            else
+            {
+                print "character $filters->{$c} doesn't exist in font.\n";
+            }
+        }
+        $char = \%newchar;
+    }
 
     $out =~ s/\.fon$//;
     if($mode =~ /analyze/) {
         analyze_chars($char);
-    }
-    if($mode =~ /export/) {
+    } elsif ($mode =~ /export/) {
         export_chars($char, $out);
-    }
-    if($mode =~ /bin/) {
+    } elsif ($mode =~ /bin/) {
         build_bin($char, $out)
+    } else
+    {
+        print "command $mode is not recongnized.\n"
     }
+}
+
+sub read_filter {
+    my($filter_file)= @_;
+    open my $fh, '<:encoding(UTF-8)', $filter_file
+        or die "Cannot open '$filter_file': $!";
+    my $current_char = 0;
+    my %char;
+    while(<$fh>) {
+        chomp;
+        if (/:(.*)/) {
+        } elsif (/>:(.*)/) {
+        }
+        elsif (/(.*)/) {
+            my $str = $1;
+            my $len = length $str;
+            if ($len > 0)
+            {
+                for my $pos (0 .. $len)
+                {
+                    my $c = substr($str, $pos, 1);
+                    my $a = ord($c);
+                    if (($a > 256) and ($a != 65279))
+                    {
+                        $char{$a} = $c;
+                    }
+                }
+            }
+        }
+    }
+
+    return \%char;
 }
 
 sub read_bdf {

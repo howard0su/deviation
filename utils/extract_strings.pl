@@ -10,7 +10,7 @@ my $target_list;
 my $objdir;
 my $count;
 # The following are legal alternatives to the default string
-my @targets = ("devo8", "devo10", "devo12");
+my @targets = ("devo8", "devo10", "devo12", "devof12e");
 
 $ENV{CROSS} ||= "";
 GetOptions("update" => \$update, "language=s" => \$lang, "fs=s" => \$fs, "targets=s" => \$target_list, "count" => \$count, "objdir=s" => \$objdir);
