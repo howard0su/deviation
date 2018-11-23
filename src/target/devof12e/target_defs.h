@@ -38,8 +38,6 @@
 #define HAS_AUDIO_UART5     0
 #define HAS_MUSIC_CONFIG    1
 
-#define NO_LANGUAGE_SUPPORT 1
-
 #ifdef BUILDTYPE_DEV
    #define DEBUG_WINDOW_SIZE 200
 #else

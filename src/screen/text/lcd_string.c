@@ -53,6 +53,7 @@ void LCD_PrintChar(u32 c)
         cur_str.y += HEIGHT(cur_str.font);
     } else {
         LCD_PrintCharXY(cur_str.x, cur_str.y, c);
+        printf("%02x(%c): %d, %d, %d\n", c, c, cur_str.x, cur_str.y);
         cur_str.x += get_width(c);
     }
 }

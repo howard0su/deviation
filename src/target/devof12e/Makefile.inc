@@ -1,5 +1,5 @@
 SCREENSIZE  := text
-FILESYSTEMS := common text text_gfx
+FILESYSTEMS := common text text_gfx base_fonts
 
 CRC_OFFSET       := 4096
 OPTIMIZE_DFU     := 1
@@ -8,6 +8,9 @@ DFU_ARGS         := -c 12 -b 0x08004000
 
 DEFAULT_PROTOCOLS := 
 INCLUDE_FS := 0
+
+LANGUAGE    := devof12e
+FONTS        = filesystem/$(FILESYSTEM)/media/12normal.fon
 
 include $(SDIR)/target/common/devo/Makefile.inc
 include target/common/devo/Makefile.devofs.inc
