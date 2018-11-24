@@ -33,23 +33,19 @@ void Delay(u32 count)
 // C99 winzip crc function, by Scott Duplichan
 //We could use the internal CRC implementation in the STM32, but this is really small
 //and perfomrance isn't really an issue
+#define FNV_32_PRIME ((u32)0x01000193)
+#define FNV1_32_INIT ((u32)0x811c9dc5)
 u32 Crc(const void *buffer, u32 size)
 {
-   u32 crc = ~0;
-   const u8  *position = buffer;
+    u32 crc = FNV1_32_INIT;
+    const u8  *position = buffer;
 
-   while (size--) 
-      {
-      int bit;
-      crc ^= *position++;
-      for (bit = 0; bit < 8; bit++) 
-         {
-         s32 out = crc & 1;
-         crc >>= 1;
-         crc ^= -out & 0xEDB88320;
-         }
-      }
-   return ~crc;
+    while (size--)
+    {
+        crc *= FNV_32_PRIME;
+        crc ^= (u32)*position++;
+    }
+    return crc;
 }
 
 /* Note that the following does no error checking on whether the string
@@ -98,17 +94,18 @@ const char *utf8_to_u32(const char *str, u32 *ch)
 //http://stackoverflow.com/questions/1453876/why-does-strncpy-not-null-terminate
 size_t strlcpy(char* dst, const char* src, size_t bufsize)
 {
-  size_t srclen =strlen(src);
-  size_t result =srclen; /* Result is always the length of the src string */
-  if(bufsize>0)
-  {
-    if(srclen>=bufsize)
-       srclen=bufsize-1;
-    if(srclen>0)
-       memcpy(dst,src,srclen);
-    dst[srclen]='\0';
-  }
-  return result;
+    char *dst0;
+    while(bufsize > 0 && *src)
+    {
+        *dst++ = *src++;
+        bufsize--;
+    }
+    if (bufsize == 0)
+        *(dst - 1) = 0;
+    else
+        *dst = 0;
+
+    return dst0 - dst;
 }
 
 void tempstring_cpy(const char* src)

@@ -330,6 +330,16 @@ filesystem/$(FILESYSTEM)/media/04b03.fon: fonts/04b03.bdf
 	mkdir -p filesystem/$(FILESYSTEM)/media/
 	../utils/font/bdf_to_font.pl -maxsize 5 -mode bin $< -out $@ -minspace 5
 
+filesystem/$(FILESYSTEM)/media/15mini.fon: fonts/15normal.bdf
+	mkdir -p filesystem/$(FILESYSTEM)/media/
+	cat fs/language/lang.* > $(ODIR)/lang.all
+	../utils/font/bdf_to_font.pl -maxsize 15 -mode bin $< -out $@ -minspace 8 -filter $(ODIR)/lang.all
+
+filesystem/$(FILESYSTEM)/media/12mini.fon: fonts/12normal.bdf
+	mkdir -p filesystem/$(FILESYSTEM)/media/
+	cat fs/language/lang.* > $(ODIR)/lang.all
+	../utils/font/bdf_to_font.pl -maxsize 12 -mode bin $< -out $@ -minspace 10 -filter $(ODIR)/lang.all
+
 ##############################
 #Build rules for all .o files#
 ##############################

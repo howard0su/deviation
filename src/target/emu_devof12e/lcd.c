@@ -118,13 +118,16 @@ void LCD_PrintCharXY(unsigned int x, unsigned int y, u32 c)
     u8 row, col, width;
 
     c = TW8816_map_char(c);
-    if ((c & 0xFF00) >= 0x300) {
+    if ((c & 0xFF00) == 0x300) {
         window_mult = cur_str.font.zoom;
         window_x = x * 12;
         window_y = y * 18;
         LCD_DrawStart(x * CHAR_WIDTH, y * CHAR_HEIGHT, (x+window_mult) * CHAR_WIDTH,  (y+window_mult) * CHAR_HEIGHT, DRAW_NWSE);
         DrawMappedChar(0, font_ram + (c & 0xff) * 27);
         LCD_DrawStop();
+        return;
+    } else if ((c & 0xFF00) > 0x0300) {
+        printf("Need load font! U-%04x\n", (int)c);
         return;
     }
     int font_size = cur_str.font.zoom;

@@ -438,6 +438,7 @@ void GUI_TouchRelease()
     }
 }
 
+#if HAS_TOUCH
 u8 _GUI_CheckTouch(struct touch *coords, u8 long_press, struct guiObject *headObj)
 {
     struct guiObject *modalObj = GUI_IsModal();
@@ -523,6 +524,7 @@ u8 _GUI_CheckTouch(struct touch *coords, u8 long_press, struct guiObject *headOb
     }
     return 0;
 }
+#endif
 
 u8 GUI_CheckTouch(struct touch *coords, u8 long_press)
 {

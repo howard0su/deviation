@@ -48,10 +48,6 @@ void _get_value_str(char *str, s32 value, u8 decimals, char units)
 {
     char format[] = "%0*d";
     format[2] = '1' + decimals;
-    if (value < 0) {
-        *str++ = '-';    // work-around tfp_format negative number bug
-        value = -value;
-    }
     sprintf(str, format, value);
 
     int i, len = strlen(str);
@@ -371,8 +367,10 @@ void TELEMETRY_Alarm()
         music_time = current_time + Transmitter.telem_alert_interval*1000;
         // K > 2 is exclude first 3 alarms from jump action (interim solution)
         // <= (9 + type) is limit jump action to only visible telemetry monitor values
+#ifdef HAS_TELEMETRY
         if (k > 2 && Model.telem_alarm[k] <= (9 + TELEMETRY_Type()))
             PAGE_ShowTelemetryAlarm();
+#endif
 #ifdef DEBUG_TELEMALARM
         printf("beep: %d\n\n", k);
 #endif
