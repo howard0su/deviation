@@ -380,18 +380,6 @@ void VIDEO_SetChannel(int ch)
         gpio_set(GPIOA, GPIO15);
 }
 
-
-/**
- * Since this is a text based screen some of the LCD string functions are here
- **/
-u8 FONT_GetFromString(const char *value)
-{
-    if (strcmp(value, "big") == 0) {
-        return 2;
-    }
-    return 1;
-}
-
 void LCD_PrintCharXY(unsigned int x, unsigned int y, u32 c)
 {
     //LCD_ShowVideo(0);

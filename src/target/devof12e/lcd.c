@@ -290,12 +290,6 @@ u8 LCD_SetFont(unsigned int idx)
     return 1;
 }
 
-u8 FONT_GetFromString(const char *value)
-{
-    (void)value;
-    return 1;
-}
-
 void LCD_DrawStart(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, enum DrawDir _dir)
 {
     (void) x0; (void) y0; (void) x1; (void) y1; (void) _dir;

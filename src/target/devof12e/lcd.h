@@ -33,8 +33,6 @@ u32 LCD_ReadReg(unsigned reg);
 #define LCD_ALIGN_CENTER    1
 #define LCD_ALIGN_RIGHT     2
 
-struct FAT FontFAT;
-
 struct font_def 
 {
         u8 idx;

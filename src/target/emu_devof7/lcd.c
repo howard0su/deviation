@@ -184,14 +184,6 @@ u8 LCD_SetFont(unsigned int idx)
     return old;
 }
 
-u8 FONT_GetFromString(const char *value)
-{
-    if (strcmp(value, "big") == 0) {
-        return 2;
-    }
-    return 1;
-}
-
 void LCD_ShowVideo(u8 enable)
 {
     (void) enable;
