@@ -14,7 +14,7 @@ main();
 sub main {
     my $out = "bdf_font";
     my $mode = "export";
-    my $filter;
+    my $filter = "";
     GetOptions("out=s" => \$out,
                "debug=i" => \$debug,
                "mode=s" => \$mode,
