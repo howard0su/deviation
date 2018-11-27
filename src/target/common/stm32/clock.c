@@ -34,15 +34,6 @@
 #define NVIC_TIMx_IRQ      TIM_CONCAT(NVIC_TIM,        SYSCLK_TIM, _IRQ)
 #define RCC_APB1ENR_TIMxEN TIM_CONCAT(RCC_APB1ENR_TIM, SYSCLK_TIM, EN)
 #define TIMx_ISR           TIM_CONCAT(tim,             SYSCLK_TIM, _isr)
-//The following is from an unreleased libopencm3
-//We should remove it eventually
-#if 1
-void iwdg_start(void);
-void iwdg_set_period_ms(u32 period);
-bool iwdg_reload_busy(void);
-bool iwdg_prescaler_busy(void);
-void iwdg_reset(void);
-#endif
 
 volatile u32 msecs;
 volatile u32 wdg_time;
