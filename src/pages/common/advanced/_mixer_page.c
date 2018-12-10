@@ -112,33 +112,39 @@ static const char *reorder_text_cb(u8 idx)
 static void reorder_return_cb(u8 *list)
 {
     if (list) {
-        int i, j, k = 0;
-        struct Mixer tmpmix[NUM_MIXERS];
-        memset(tmpmix, 0, sizeof(tmpmix));
-        for(j = 0; j < NUM_CHANNELS; j++) {
-            for(i = 0; i <NUM_MIXERS; i++) {
-                if(Model.mixers[i].src && Model.mixers[i].dest == list[j]-1) {
-                    memcpy(&tmpmix[k], &Model.mixers[i], sizeof(struct Mixer));
-                    tmpmix[k].dest = j;
-                    k++;
+        int i, j;
+        {
+            int k = 0;
+            struct Mixer tmpmix[NUM_MIXERS];
+            memset(tmpmix, 0, sizeof(tmpmix));
+            for(j = 0; j < NUM_CHANNELS; j++) {
+                for(i = 0; i <NUM_MIXERS; i++) {
+                    if(Model.mixers[i].src && Model.mixers[i].dest == list[j]-1) {
+                        memcpy(&tmpmix[k], &Model.mixers[i], sizeof(struct Mixer));
+                        tmpmix[k].dest = j;
+                        k++;
+                    }
                 }
             }
+            memcpy(Model.mixers, tmpmix, sizeof(Model.mixers));
         }
-        memcpy(Model.mixers, tmpmix, sizeof(Model.mixers));
-        struct Limit tmplimits[NUM_OUT_CHANNELS];
-        u8 tmptemplates[NUM_CHANNELS];
-        for(j = 0; j < NUM_CHANNELS; j++) {
-            if(j < NUM_OUT_CHANNELS) {
-               if(list[j]-1 < NUM_OUT_CHANNELS) {
-                   tmplimits[j] = Model.limits[list[j]-1]; 
-               } else {
-                   MIXER_SetDefaultLimit(&tmplimits[j]);
-               }
+        {
+            struct Limit tmplimits[NUM_OUT_CHANNELS];
+            u8 tmptemplates[NUM_CHANNELS];
+            for(j = 0; j < NUM_CHANNELS; j++) {
+                if(j < NUM_OUT_CHANNELS) {
+                   if(list[j]-1 < NUM_OUT_CHANNELS) {
+                       tmplimits[j] = Model.limits[list[j]-1];
+                   } else {
+                       MIXER_SetDefaultLimit(&tmplimits[j]);
+                   }
+                }
+                tmptemplates[j] = Model.templates[list[j]-1];
             }
-            tmptemplates[j] = Model.templates[list[j]-1];
+            memcpy(Model.limits, tmplimits, sizeof(Model.limits));
+            memcpy(Model.templates, tmptemplates, sizeof(Model.templates));
         }
-        memcpy(Model.templates, tmptemplates, sizeof(Model.templates));
-        memcpy(Model.limits, tmplimits, sizeof(Model.limits));
+
         MIXER_SetMixers(NULL, 0);
     }
 }
