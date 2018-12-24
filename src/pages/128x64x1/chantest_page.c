@@ -147,9 +147,9 @@ static const char *_page_cb(guiObject_t *obj, const void *data)
 {
     (void)obj;
     (void)data;
-    tempstring_cpy((const char *)"->");  //this is actually used as an icon don't translate
+    tempstring_cpy("->");  //this is actually used as an icon don't translate
     if (cp->type == MONITOR_RAWINPUT) {
-        tempstring_cpy((const char *)"<-");
+        tempstring_cpy("<-");
     }
     return tempstring;
 }

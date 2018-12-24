@@ -56,7 +56,7 @@ static const char *set_mode_cb(guiObject_t *obj, int dir, void *data)
         for ( i = 0; i < 9; i++)
             GUI_Redraw(&gui->val[i]);
     }
-    tempstring_cpy((const char *)STDMIX_ModeName(pit_mode));
+    tempstring_cpy(STDMIX_ModeName(pit_mode));
     return tempstring;
 }
 

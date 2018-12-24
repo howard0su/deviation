@@ -94,28 +94,6 @@ const char *utf8_to_u32(const char *str, u32 *ch)
     return NULL;
 }
 
-//strlcpy from
-//http://stackoverflow.com/questions/1453876/why-does-strncpy-not-null-terminate
-size_t strlcpy(char* dst, const char* src, size_t bufsize)
-{
-  size_t srclen =strlen(src);
-  size_t result =srclen; /* Result is always the length of the src string */
-  if(bufsize>0)
-  {
-    if(srclen>=bufsize)
-       srclen=bufsize-1;
-    if(srclen>0)
-       memcpy(dst,src,srclen);
-    dst[srclen]='\0';
-  }
-  return result;
-}
-
-void tempstring_cpy(const char* src)
-{
-    strlcpy(tempstring, src, sizeof(tempstring));
-}
-
 int exact_atoi(const char *str)
 {
     char *endptr;

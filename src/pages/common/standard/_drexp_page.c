@@ -54,13 +54,13 @@ static const char *set_type_cb(guiObject_t *obj, int dir, void *data)
     }
     switch (drexp_type) {
     case DREXP_AIL:
-        tempstring_cpy((const char *)_tr("AIL"));
+        tempstring_cpy(_tr("AIL"));
         break;
     case DREXP_ELE:
-        tempstring_cpy((const char *)_tr("ELE"));
+        tempstring_cpy(_tr("ELE"));
         break;
     default:
-        tempstring_cpy((const char *)_tr("RUD"));
+        tempstring_cpy(_tr("RUD"));
         break;
     }
     return tempstring;
