@@ -12,6 +12,7 @@
  You should have received a copy of the GNU General Public License
  along with Deviation.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "protocol/interface.h"
 
 static struct scanner_page * const sp = &pagemem.u.scanner_page;
 
