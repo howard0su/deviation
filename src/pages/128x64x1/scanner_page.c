@@ -70,12 +70,12 @@ void _draw_page(u8 enable)
     GUI_CreateButtonPlateText(&gui->scan_mode,  BUTTON2_X, BUTTON2_Y, BUTTON_WIDTH, LINE_HEIGHT, &BUTTON_FONT, modestr_cb, press_mode_cb, NULL);
     GUI_CreateButtonPlateText(&gui->attenuator, BUTTON3_X, BUTTON3_Y, BUTTON_WIDTH, LINE_HEIGHT, &BUTTON_FONT, attstr_cb, press_attenuator_cb, NULL);
 
-#if HAS_MAPPED_GFX
+#ifdef HAS_MAPPED_GFX
     LCD_CreateMappedWindow(1, 46, 5, 6, 4);
 #endif
 }
 
-#if HAS_MAPPED_GFX
+#ifdef HAS_MAPPED_GFX
 void _draw_channels()
 {
     _GUI_DrawMappedStart();
@@ -86,8 +86,6 @@ void _draw_channels()
         int height = sp->channelnoise[i] * GRAPH_HEIGHT / 0x1F;
 
         printf("%d %d\n", col, height);
-        //LCD_DrawMappedPixelXY(GRAPH_X_OFFSET + col, GRAPH_Y_OFFSET +  GRAPH_HEIGHT - height, 1);
-        //LCD_DrawFastVLine(GRAPH_X_OFFSET + col, GRAPH_Y_OFFSET + 0, GRAPH_Y_OFFSET +  GRAPH_HEIGHT - height, 0);
         LCD_DrawFastVLine(GRAPH_X_OFFSET + col, GRAPH_Y_OFFSET + GRAPH_HEIGHT - height, GRAPH_Y_OFFSET + GRAPH_HEIGHT, Display.xygraph.grid_color);
     }
     _GUI_DrawMappedStop();
@@ -99,7 +97,7 @@ void _draw_channels()
     int col = (GRAPH_WIDTH - (MAX_RADIOCHANNEL - MIN_RADIOCHANNEL)) / 2 + sp->channel;
     int height = sp->channelnoise[sp->channel] * GRAPH_HEIGHT / 0x1F;
 
-    LCD_DrawFastVLine(GRAPH_X_OFFSET + col, GRAPH_Y_OFFSET + 0, GRAPH_Y_OFFSET +  GRAPH_HEIGHT - height, 0);
+    LCD_DrawFastVLine(GRAPH_X_OFFSET + col, GRAPH_Y_OFFSET + 0, GRAPH_Y_OFFSET +  GRAPH_HEIGHT - height, Display.xygraph.bg_color);
     LCD_DrawFastVLine(GRAPH_X_OFFSET + col, GRAPH_Y_OFFSET + GRAPH_HEIGHT - height, GRAPH_Y_OFFSET + GRAPH_HEIGHT, Display.xygraph.grid_color);
 }
 #endif
