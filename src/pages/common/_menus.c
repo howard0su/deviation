@@ -23,17 +23,26 @@ static const char *idx_string_cb(guiObject_t *obj, const void *data);
 static const char *menu_name_cb(guiObject_t *obj, const void *data);
 static int row_cb(int absrow, int relrow, int y, void *data);
 
+/* define another set of list which skip the dialogs in the bottom of pagelist.h */
+#define NO_DIALOG_PAGE
+#define PAGEDEF(_id, _init, _event, _exit, _menu, _name) _menu,
+static u8 menuids[] = {
+    #include "pagelist.h"
+};
+#undef PAGEDEF
+
+#define PAGEDEF(_id, _init, _event, _exit, _menu, _name) MENU##_id,
+enum MENU_PAGEID{
+    #include "pagelist.h"
+    MENU_PAGEID_LAST
+};
+#undef PAGEDEF
+#undef NO_DIALOG_PAGE
 
 static int menu_get_next_rowidx(unsigned *i)
 {
-    for (; *i < PAGEID_LAST; (*i)++) {
-        unsigned menu = 0xffff;
-        #define PAGEDEF(_id, _init, _event, _exit, _menu, _name) \
-        case _id: menu = _menu; break;
-        switch(*i) {
-            #include "pagelist.h"
-        }
-        #undef PAGEDEF
+    for (; *i < MENU_PAGEID_LAST; (*i)++) {
+        u8 menu = menuids[*i];
         if ((menu & 0xf0) != mp->menu_id)
             continue;
         if ((menu & Model.mixer_mode) != Model.mixer_mode)

@@ -87,6 +87,7 @@ PAGEDEF(PAGEID_EXTOSD,   PAGE_ExternalOSDInit, NULL,                  NULL,     
 #endif
 //-------------------
 
+#ifndef NO_DIALOG_PAGE
 //These pages should not be lisetd for quickpages
 PAGEDEF(PAGEID_SPLASH,   PAGE_SplashInit,      PAGE_SplashEvent,      PAGE_SplashExit,    0,           _tr_noop("Welcome"))
 PAGEDEF(PAGEID_EDITLIMIT,PAGE_EditLimitsInit,  NULL,                  NULL,               0,           "")
@@ -103,6 +104,7 @@ PAGEDEF(PAGEID_TYPECFG,  PAGE_ModelConfigInit, NULL,                  NULL,     
 PAGEDEF(PAGEID_TRAINCFG, PAGE_TrainConfigInit, NULL,                  NULL,               0,           "")
 #if HAS_LAYOUT_EDITOR
 PAGEDEF(PAGEID_LAYOUT,   PAGE_LayoutEditInit,  NULL,                  NULL,               0,           "")
+#endif
 #endif
 
 #undef MAIN_MENU
