@@ -22,7 +22,7 @@
 #include <libopencm3/stm32/dma.h>
 #include <libopencm3/cm3/nvic.h>
 
-#include "../ports.h"
+#include "ports.h"
 
 
 void _PWM_DMA_ISR(void)

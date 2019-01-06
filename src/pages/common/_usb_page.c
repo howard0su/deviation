@@ -17,9 +17,6 @@ static struct usb_page * const up = &pagemem.u.usb_page;
 
 static void _draw_page(u8 enable);
 
-void wait_release();
-void wait_press();
-
 unsigned usb_cb(u32 button, unsigned flags, void *data)
 {
     (void)button;
@@ -28,11 +25,7 @@ unsigned usb_cb(u32 button, unsigned flags, void *data)
         _draw_page(1);
         GUI_RefreshScreen();
         CONFIG_SaveModelIfNeeded();
-        USB_Enable(0, 1);
-        wait_release();
-        wait_press();
-        wait_release();
-        USB_Disable();
+        USB_Connect();
         CONFIG_ReadModel(Transmitter.current_model);
         _draw_page(0);
     }

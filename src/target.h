@@ -224,6 +224,10 @@ void SSER_Initialize();
 void SSER_Stop();
 
 /* USB*/
+enum {
+    USB_MSC,
+    USB_HID
+};
 void USB_Enable(unsigned type, unsigned use_interrupt);
 void USB_Disable();
 void USB_HandleISR();
