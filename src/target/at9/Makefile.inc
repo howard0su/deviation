@@ -51,8 +51,8 @@ CFLAGS   = -D"assert_param(x)=" -DSTM32F10X_HD -DSTM32F1 -mcpu=cortex-m3 -mthumb
 ifeq "$(HAS_4IN1_FLASH)" "1"
 CFLAGS  += -D"HAS_4IN1_FLASH=1"
 endif
-ifeq "$(HAS_FLASH_DETECT)" "1"
-CFLAGS  += -D"HAS_FLASH_DETECT=1"
+ifeq "$(HAS_FLASH_DETECT)" "0"
+CFLAGS  += -D"HAS_FLASH_DETECT=0"
 endif
 MODULE_FLAGS = -fno-builtin
 

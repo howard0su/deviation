@@ -40,7 +40,7 @@
 #endif
 
 #ifndef HAS_FLASH_DETECT
-    #define HAS_FLASH_DETECT 0
+    #define HAS_FLASH_DETECT 1
 #endif
 
 #if HAS_FLASH_DETECT

@@ -17,6 +17,7 @@
     #define SPIFLASH_TYPE SST25VFxxxA
     #define USE_DEVOFS 1 //Must be before common_devo include
 #endif
+#define HAS_FLASH_DETECT 0
 
 #include "../common/devo/common_devo.h"
 

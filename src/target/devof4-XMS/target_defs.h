@@ -12,8 +12,8 @@
     #define SPIFLASH_SECTOR_OFFSET 0
     #define SPIFLASH_SECTORS 4096
     #define SPIFLASH_TYPE W25QxxBV
+    #define HAS_FLASH_DETECT 0
 #else
-    #define HAS_FLASH_DETECT 1
     #define SPIFLASH_SECTOR_OFFSET 0
 #endif
 
