@@ -52,9 +52,9 @@ static int _scan_rssi()
 {
     if ( !(CYRF_ReadRegister(CYRF_05_RX_CTRL) & 0x80)) {
         CYRF_WriteRegister(CYRF_05_RX_CTRL, 0x80); //Prepare to receive
-        Delay(10);
+        _usleep(10);
         CYRF_ReadRegister(CYRF_13_RSSI); //dummy read
-        Delay(15);
+        _usleep(15);
     }
 #ifdef EMULATOR
     return rand32() % 0x1F;
