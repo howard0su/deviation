@@ -108,7 +108,6 @@ void LCD_Init()
 
     //Common output mode selection (15); 0xC0; normal scan
     LCD_CMD = 0xC0;
-    Delay(5);
 
     //Setting built-in resistance ratio (17); 0x24; default=7.50
     LCD_CMD = 0x24;
@@ -116,11 +115,9 @@ void LCD_Init()
     //Electronic volume control (18) -> LCD brightness; 0x20; default=32d
     LCD_CMD = 0x81;
     LCD_CMD = 0x25 & 0x3F; // = LCD_Contrast(5);
-    Delay(5);
 
     //Power control setting (16); V/B, V/R, V/F are used
     LCD_CMD = 0x2F;
-    Delay(5);
 
     // Read-Modify-Write (12); let read data does not increment column address
     LCD_CMD = 0xE0;
