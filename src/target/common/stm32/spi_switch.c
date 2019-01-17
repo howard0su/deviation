@@ -70,9 +70,9 @@ static void detect()
     /* Check that CYRF6936 is present */
     /* CYRF6936 reset */
     CS_HI();
-    Delay(100);
+    _usleep(10);
     CS_LO();
-    Delay(100);
+    _usleep(10);
     PORT_pin_clear(PROTO_CSN_PIN);
     spi_xfer(SPIx, 0x10);
     res = spi_xfer(SPIx, 0);
@@ -86,9 +86,9 @@ static void detect()
     UseModule(MODULE_CYRF6936);
     /* Check that CYRF6936 is present */
     SPISwitch_CYRF6936_RESET(1);
-    Delay(100);
+    _usleep(10);
     SPISwitch_CYRF6936_RESET(0);
-    Delay(100);
+    _usleep(10);
     PORT_pin_clear(PROTO_CSN_PIN);
     spi_xfer(SPIx, 0x10);
     res = spi_xfer(SPIx, 0);
