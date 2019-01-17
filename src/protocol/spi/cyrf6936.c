@@ -97,21 +97,18 @@ int CYRF_Reset()
 #if HAS_4IN1_FLASH && !defined(MODULAR)
     if (SPISwitch_Present()) {
         SPISwitch_CYRF6936_RESET(1);
-        Delay(100);
+        _usleep(10);
         SPISwitch_CYRF6936_RESET(0);
-        Delay(100);
     } else {
 #endif        
 #if HAS_MULTIMOD_SUPPORT || (defined(HAS_CYRF_RESET) && ! HAS_CYRF_RESET)
         CYRF_WriteRegister(CYRF_1D_MODE_OVERRIDE, 0x01);
-        Delay(200);
         /* Reset the CYRF chip */
 #else
         static const struct mcu_pin CYRF_RESET_PIN  = _SPI_CYRF_RESET_PIN;
         PROTOSPI_pin_set(CYRF_RESET_PIN);
-        Delay(100);
+        _usleep(10);
         PROTOSPI_pin_clear(CYRF_RESET_PIN);
-        Delay(100);
 #endif
 #if HAS_4IN1_FLASH && !defined(MODULAR)
     }
@@ -313,15 +310,15 @@ void CYRF_FindBestChannels(u8 *channels, u8 len, u8 minspace, u8 min, u8 max)
     CYRF_ConfigCRCSeed(0x0000);
     CYRF_SetTxRxMode(RX_EN);
     //Wait for pre-amp to switch from send to receive
-    Delay(1000);
+    _usleep(1000);
     for(i = 0; i < NUM_FREQ; i++) {
         CYRF_ConfigRFChannel(i);
-        Delay(270); //slow channel require 270usec for synthesizer to settle
+        _usleep(270); //slow channel require 270usec for synthesizer to settle
         if ( !(CYRF_ReadRegister(CYRF_05_RX_CTRL) & 0x80)) {
             CYRF_WriteRegister(CYRF_05_RX_CTRL, 0x80); //Prepare to receive
-            Delay(10);
+            _usleep(10);
             CYRF_ReadRegister(CYRF_13_RSSI); //dummy read
-            Delay(15); //conversion can occur as often as once every 12us
+            _usleep(15); //conversion can occur as often as once every 12us
         }
         rssi[i] = CYRF_ReadRegister(CYRF_13_RSSI) & 0x1F;
     }
