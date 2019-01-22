@@ -18,7 +18,7 @@
 #include "../pages.h"
 #include "gui/gui.h"
 #include "config/model.h"
-#include "standard.h"
+#include "../../common/standard/standard.h"
 
 enum {
     FIELD_X        = 77,

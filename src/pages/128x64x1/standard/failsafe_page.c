@@ -17,19 +17,13 @@
 #include "../pages.h"
 #include "gui/gui.h"
 #include "config/model.h"
-#include "standard.h"
+#include "../../common/standard/standard.h"
 
 #if HAS_STANDARD_GUI
 #include "../../common/standard/_failsafe_page.c"
 
-static const struct page_defs failsafe_defs = {
-    _tr_noop("Fail-safe"),
-    set_failsafe_cb,
-    toggle_failsafe_cb,
-};
 void PAGE_FailSafeInit(int page)
 {
-    (void)page;
-    STANDARD_Init(&failsafe_defs);
+    STANDARD_Init(page, set_failsafe_cb, toggle_failsafe_cb);
 }
 #endif //HAS_STANDARD_GUI

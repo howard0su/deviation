@@ -50,7 +50,8 @@ struct mixer_page {
     u8 list[NUM_CHANNELS > NUM_COMPLEX_MIXERS ? NUM_CHANNELS : NUM_COMPLEX_MIXERS];
 
     enum TemplateType cur_template;
-
+    const char *(*value)(guiObject_t *obj, int dir, void *data);
+    void (*tgl)(guiObject_t *obj, void *data);
     struct curve_edit edit;
 };
 

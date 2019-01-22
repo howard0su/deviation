@@ -20,7 +20,7 @@
 #include "config/model.h"
 #include "mixer.h"
 #include "mixer_standard.h"
-#include "standard.h"
+#include "../../common/standard/standard.h"
 
 enum {
     MESSAGE_Y    = 10,

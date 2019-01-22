@@ -1,5 +1,6 @@
 #ifndef _COMMON_STANDARD_H_
 #define _COMMON_STANDARD_H_
+#define VIEW_ID 0
 
 #include "mixer_standard.h"
 
@@ -14,6 +15,15 @@ typedef enum {
     CURVESMODE_PITCH = 0,
     CURVESMODE_THROTTLE,
 } CurvesMode;
+
+void STANDARD_Init(int pageid,
+    const char *(*value)(guiObject_t *obj, int dir, void *data),
+    void (*tgl)(guiObject_t *obj, void *data));
+
+void STANDARD_DrawCurvePoints(guiLabel_t vallbl[], guiTextSelect_t val[],
+        u8 selectable_bitmap,
+        void (*press_cb)(guiObject_t *obj, void *data),
+        const char *(*set_pointval_cb)(guiObject_t *obj, int value, void *data));
 
 const char *STDMIX_channelname_cb(guiObject_t *obj, const void *data);
 int STDMIX_GetMixers(struct Mixer **mixers, u8 dest_channel, int count);

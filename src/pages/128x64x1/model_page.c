@@ -20,7 +20,7 @@
 #include "config/model.h"
 #include "config/tx.h"
 #include "mixer_standard.h"
-#include "standard/standard.h"
+#include "../common/standard/standard.h"
 
 enum {
     DEFAULT_TEXTSEL_X = 63,

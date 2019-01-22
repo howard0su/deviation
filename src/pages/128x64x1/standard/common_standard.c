@@ -38,30 +38,33 @@ enum {
 #endif //OVERRIDE_PLACEMENT
 
 #if HAS_STANDARD_GUI
-#include "standard.h"
+#include "../../common/standard/standard.h"
 #include "../../common/standard/_common_standard.c"
 
 static struct stdchan_obj * const gui = &gui_objs.u.stdchan;
+static struct mixer_page * const mp = &pagemem.u.mixer_page;
 
 //"Reverse", "Subtrim" and "Fail-safe" pages
 static int row_cb(int absrow, int relrow, int y, void *data)
 {
-    struct page_defs *page_defs = (struct page_defs *)data;
     (void)data;
 
     GUI_CreateLabelBox(&gui->name[relrow], LABEL_X, y,
             LABEL_WIDTH, LINE_HEIGHT, &LABEL_FONT, STDMIX_channelname_cb, NULL, (void *)(long)absrow);
     GUI_CreateTextSelectPlate(&gui->value[relrow], FIELD_X, y,
-            FIELD_WIDTH, LINE_HEIGHT, &TEXTSEL_FONT, page_defs->tgl, page_defs->value, (void *)(long)absrow);
+            FIELD_WIDTH, LINE_HEIGHT, &TEXTSEL_FONT, mp->tgl, mp->value, (void *)absrow);
     return 1;
 }
 
-void STANDARD_Init(const struct page_defs *page_defs)
+void STANDARD_Init(int pageid, const char *(*value_cb)(guiObject_t *obj, int dir, void *data),
+                   void (*tgl_cb)(guiObject_t *obj, void *data))
 {
+    mp->value = value_cb;
+    mp->tgl = tgl_cb;
     PAGE_RemoveAllObjects();
-    PAGE_ShowHeader(_tr(page_defs->title));
+    PAGE_ShowHeader(PAGE_GetName(pageid));
     GUI_CreateScrollable(&gui->scrollable, 0, HEADER_HEIGHT, LCD_WIDTH, LCD_HEIGHT - HEADER_HEIGHT,
-                     LINE_SPACE, Model.num_channels, row_cb, NULL, NULL, (void *)page_defs);
+                     LINE_SPACE, Model.num_channels, row_cb, NULL, NULL, NULL);
     GUI_SetSelected(GUI_ShowScrollableRowOffset(&gui->scrollable, 0));
 }
 

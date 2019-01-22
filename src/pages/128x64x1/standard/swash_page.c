@@ -19,7 +19,7 @@
 #include "gui/gui.h"
 #include "config/model.h"
 #include "mixer.h"
-#include "standard.h"
+#include "../../common/standard/standard.h"
 #include "mixer_standard.h"
 
 enum {
