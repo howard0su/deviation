@@ -80,6 +80,11 @@ static u16 usbhid_cb()
     return 50000;
 }
 
+#ifdef MODULAR
+void NOP_Process() {
+}
+#endif
+
 static void initialize()
 {
     CLOCK_StopTimer();
