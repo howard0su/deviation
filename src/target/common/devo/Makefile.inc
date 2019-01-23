@@ -103,8 +103,8 @@ $(TARGET).dfu: $(TARGET).bin
 ###################################
 $(ODIR)/%.bin: $(ODIR)/%.o_ $(PROTO_LINKFILE) $(PROTO_EXTRA_OBJS) $(TARGET).bin
 	@echo " + Building '$@'"
-	$(LD) -o $(@:.bin=.elf) $< $(PROTO_EXTRA_OBJS) $(LIBOPENCM3) -gc-sections -Map=$(@:.bin=.map) \
-		--cref -T$(PROTO_LINKFILE) --just-symbols=$(SYMBOL_FILE)
+	$(CC) -o $(@:.bin=.elf) $< $(PROTO_EXTRA_OBJS) $(LIBOPENCM3) --specs=nano.specs -Wl,-gc-sections \
+	-Wl,-Map=$(@:.bin=.map),--cref -T$(PROTO_LINKFILE) -Wl,--just-symbols=$(SYMBOL_FILE) -fno-builtin-printf -Os -lc -lnosys
 	$(DUMP) -t $(@:.bin=.elf) | grep -q _from_thumb; if [ $$? -eq 0 ]; then echo "ERROR: Bad address found"; false; else true; fi
 	$(CP) -O binary  $(@:.bin=.elf) $@
 
