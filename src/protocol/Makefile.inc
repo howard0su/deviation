@@ -17,7 +17,7 @@ PROTO_MODULES += $(ODIR)/protocol/frsky.mod
 PROTO_MODULES += $(ODIR)/protocol/skyartec.mod
 PROTO_MODULES += $(ODIR)/protocol/v202.mod
 PROTO_MODULES += $(ODIR)/protocol/slt.mod
-PROTO_MODULES += $(ODIR)/protocol/usbhid.mod
+#PROTO_MODULES += $(ODIR)/protocol/usbhid.mod
 PROTO_MODULES += $(ODIR)/protocol/hisky.mod
 PROTO_MODULES += $(ODIR)/protocol/yd717.mod
 PROTO_MODULES += $(ODIR)/protocol/symax.mod
@@ -56,7 +56,7 @@ PROTO_MODULES += $(ODIR)/protocol/ncc1701.mod
 PROTO_MODULES += $(ODIR)/protocol/v911s.mod
 PROTO_MODULES += $(ODIR)/protocol/gd00x.mod
 PROTO_MODULES += $(ODIR)/protocol/sbus.mod
-PROTO_MODULES += $(ODIR)/protocol/pxx.mod
+#PROTO_MODULES += $(ODIR)/protocol/pxx.mod
 
 ALL += $(PROTO_MODULES)
 else #BUILD_TARGET
