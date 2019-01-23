@@ -151,11 +151,11 @@ typedef enum {
 extern volatile mixsync_t mixer_sync;
 
 /*PWM/PPM functions */
-void PWM_Initialize();
-void PWM_Stop();
-void PWM_Set(int);
-void PPM_Enable(unsigned low_time, volatile u16 *pulses, u8 num_pulses);
-void PXX_Enable(u8 *packet);
+MODULE_CALLTYPE void PWM_Initialize();
+MODULE_CALLTYPE void PWM_Stop();
+MODULE_CALLTYPE void PWM_Set(int);
+MODULE_CALLTYPE void PPM_Enable(unsigned low_time, volatile u16 *pulses, u8 num_pulses);
+MODULE_CALLTYPE void PXX_Enable(u8 *packet);
 
 /* PPM-In functions */
 #define MAX_PPM_IN_CHANNELS 8
@@ -210,11 +210,12 @@ typedef enum {
     UART_DUPLEX_FULL,
     UART_DUPLEX_HALF,
 } uart_duplex;
-void UART_Initialize();
-void UART_Stop();
-u8 UART_Send(u8 *data, u16 len);
-void UART_SetDataRate(u32 bps);
-void UART_SetFormat(int bits, uart_parity parity, uart_stopbits stopbits);
+
+MODULE_CALLTYPE void UART_Initialize();
+MODULE_CALLTYPE void UART_Stop();
+MODULE_CALLTYPE u8 UART_Send(u8 *data, u16 len);
+MODULE_CALLTYPE void UART_SetDataRate(u32 bps);
+MODULE_CALLTYPE void UART_SetFormat(int bits, uart_parity parity, uart_stopbits stopbits);
 typedef void usart_callback_t(u8 ch, u8 status);
 /* callback status byte bit fields */
 #define UART_RX_RXNE (1 << 5)  //USART_SR_RXNE - rx buffer not empty
@@ -222,9 +223,9 @@ typedef void usart_callback_t(u8 ch, u8 status);
 #define UART_SR_NE   (1 << 2)  //USART_SR_NE   - noise error
 #define UART_SR_FE   (1 << 1)  //USART_SR_FE   - framing error
 #define UART_SR_PE   (1 << 0)  //USART_SR_PE   - parity error
-void UART_StartReceive(usart_callback_t isr_callback);
-void UART_StopReceive();
-void UART_SetDuplex(uart_duplex duplex);
+MODULE_CALLTYPE void UART_StartReceive(usart_callback_t isr_callback);
+MODULE_CALLTYPE void UART_StopReceive();
+MODULE_CALLTYPE void UART_SetDuplex(uart_duplex duplex);
 typedef void sser_callback_t(u8 data);
 void SSER_StartReceive(sser_callback_t isr_callback);
 void SSER_Initialize();
@@ -235,8 +236,8 @@ void USB_Enable(unsigned type, unsigned use_interrupt);
 void USB_Disable();
 void USB_HandleISR();
 void USB_Connect();
-void HID_Enable();
-void HID_Disable();
+MODULE_CALLTYPE void HID_Enable();
+MODULE_CALLTYPE void HID_Disable();
 
 /* Filesystem */
 int FS_Mount(void *FAT, const char *drive);
