@@ -16,7 +16,6 @@
 #ifdef MODULAR
   //Allows the linker to properly relocate
   #define PPMOUT_Cmds PROTO_Cmds
-  #pragma long_calls
 #endif
 
 #include "common.h"
@@ -25,7 +24,6 @@
 #include "config/model.h"
 
 #ifdef MODULAR
-  #pragma long_calls_off
   extern unsigned _data_loadaddr;
   const unsigned long protocol_type = (unsigned long)&_data_loadaddr;
 #endif

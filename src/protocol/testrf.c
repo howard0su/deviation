@@ -16,7 +16,6 @@
 #ifdef MODULAR
   //Allows the linker to properly relocate
   #define TESTRF_Cmds PROTO_Cmds
-  #pragma long_calls
 #endif
 
 #include "common.h"
@@ -27,7 +26,6 @@
 
 #if defined PROTO_HAS_CYRF6936 && defined PROTO_HAS_A7105 && defined PROTO_HAS_CC2500 && defined PROTO_HAS_NRF24L01
 #ifdef MODULAR
-  #pragma long_calls_off
   extern unsigned _data_loadaddr;
   const unsigned long protocol_type = (unsigned long)&_data_loadaddr;
 #endif

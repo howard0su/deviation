@@ -23,7 +23,6 @@
 #ifdef MODULAR
   //Allows the linker to properly relocate
 #define Bayang_Cmds PROTO_Cmds
-#pragma long_calls
 #endif
 #include "common.h"
 #include "interface.h"
@@ -35,7 +34,7 @@
 #ifdef MODULAR
   //Some versions of gcc apply this to definitions, others to calls
   //So just use long_calls everywhere
-  //#pragma long_calls_off
+  //
 extern unsigned _data_loadaddr;
 const unsigned long protocol_type = (unsigned long) &_data_loadaddr;
 #endif

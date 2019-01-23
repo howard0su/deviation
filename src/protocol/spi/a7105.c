@@ -13,11 +13,6 @@
     along with Deviation.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef MODULAR
-  //Allows the linker to properly relocate
-  #define DEVO_Cmds PROTO_Cmds
-  #pragma long_calls
-#endif
 #include "common.h"
 #include "config/tx.h"
 #include "protocol/interface.h"
@@ -178,5 +173,5 @@ void A7105_AdjustLOBaseFreq(s16 offset)
     A7105_WriteReg( A7105_13_PLL_V, bfp & 0xff);
 }
 
-//#pragma long_calls_off
+//
 #endif

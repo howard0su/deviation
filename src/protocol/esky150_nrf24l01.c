@@ -34,17 +34,15 @@
 
 #ifdef PROTO_HAS_NRF24L01
 #include "iface_nrf24l01.h"
-
 #ifdef MODULAR
   //Some versions of gcc apply this to definitions, others to calls
   //So just use long_calls everywhere
-  //#pragma long_calls_off
+  //
   extern u32 _data_loadaddr;
   const u32 protocol_type = (u32)&_data_loadaddr;
 
   //Allows the linker to properly relocate
   #define ESKY150_Cmds PROTO_Cmds
-  #pragma long_calls
 #endif
 
 //================================================================================================

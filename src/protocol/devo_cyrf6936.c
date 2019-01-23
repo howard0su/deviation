@@ -16,7 +16,6 @@
 #ifdef MODULAR
     //Allows the linker to properly relocate
     #define DEVO_Cmds PROTO_Cmds
-    #pragma long_calls
 #endif
 
 #include "common.h"

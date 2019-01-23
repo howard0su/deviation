@@ -13,15 +13,11 @@
     along with Deviation.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef MODULAR
-  #pragma long_calls
-#endif
-
 #include "common.h"
 #include "config/tx.h"
 //Some versions of gcc applythis to definitions, others to calls
 //So just use long_calls everywhere
-//#pragma long_calls_off
+//
 #include "protocol/interface.h"
 #include "protospi.h"
 

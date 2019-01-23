@@ -3,7 +3,7 @@ in RAM that can executue any available functions from ROM.
 
 Since a RAM->ROM call requires bx/blx, we must ensure long calls are made.
 
-This is done by adding: '#pragma long_calls' before any includes are done.
+This is done by adding: '' before any includes are done.
 Since we don't want code within the program itself touse long-calls (they take
 more space), we add '#pragma no_long_calls' after all files are included
 
