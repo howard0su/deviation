@@ -228,9 +228,9 @@ void TestCreateCyclicOutput(CuTest *t)
     Model.swash_type = SWASH_TYPE_120;
     {
         memset(cyc, 0, sizeof(cyc));
-        Model.swashmix[0] = 25;
-        Model.swashmix[1] = 50;
-        Model.swashmix[2] = 75;
+        Model.swash_ailmix = 25;
+        Model.swash_elemix = 50;
+        Model.swash_colmix = 75;
         MIXER_CreateCyclicOutput(rawdata, cyc);
         s32 expected[] = {1250, 3000, 2500};
         for (int i = 0; i < 3; i ++) {
