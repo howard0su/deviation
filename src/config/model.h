@@ -41,7 +41,7 @@ struct Model {
     enum TxPower tx_power;
     enum SwashType swash_type;
     u8 swash_invert;
-    u8 swashmix[3];
+    u8 swash_ailmix, swash_elemix, swash_colmix;
     char name[24];
     char icon[24];
     char virtname[NUM_VIRT_CHANNELS][VIRT_NAME_LEN];

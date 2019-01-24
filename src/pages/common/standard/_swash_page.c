@@ -64,6 +64,7 @@ static const char *swashmix_val_cb(guiObject_t *obj, int dir, void *data)
     if (!GUI_IsTextSelectEnabled(obj))
         return _tr("None");
     int i = (long)data;
+    u8 *mixer;
     u8 changed = 1;
     swashmix[i] = GUI_TextSelectHelper(swashmix[i], -100, 100, dir, 1, 5, &changed);
     if (changed) {
@@ -71,19 +72,22 @@ static const char *swashmix_val_cb(guiObject_t *obj, int dir, void *data)
         switch (i) {
         case 0: // aile
             mask = SWASH_INV_AILERON_MASK;
+            mixer = &Model.swash_ailmix;
             break;
         case 1:  // elev
             mask = SWASH_INV_ELEVATOR_MASK;
+            mixer = &Model.swash_elemix;
             break;
         default:  // pit
             mask = SWASH_INV_COLLECTIVE_MASK;
+            mixer = &Model.swash_colmix;
             break;
         }
         if (swashmix[i] >= 0) {
-            Model.swashmix[i] = swashmix[i];
+            *mixer = swashmix[i];
             Model.swash_invert = Model.swash_invert & ~mask;
         } else  {
-            Model.swashmix[i] = -swashmix[i];
+            *mixer = -swashmix[i];
             Model.swash_invert = Model.swash_invert | mask;
         }
     }
@@ -94,22 +98,26 @@ static const char *swashmix_val_cb(guiObject_t *obj, int dir, void *data)
 static void get_swash()
 {
     for (u8 i = 0; i < 3; i++) {
+        u8 *mixer;
         u8 mask = SWASH_INV_ELEVATOR_MASK;
         switch (i) {
         case 0: // aile
             mask = SWASH_INV_AILERON_MASK;
+            mixer = &Model.swash_ailmix;
             break;
         case 1:  // elev
             mask = SWASH_INV_ELEVATOR_MASK;
+            mixer = &Model.swash_elemix;
             break;
         default:  // pit
             mask = SWASH_INV_COLLECTIVE_MASK;
+            mixer = &Model.swash_colmix;
             break;
         }
         if (Model.swash_invert & mask)
-            swashmix[i] = -Model.swashmix[i];
+            swashmix[i] = -*mixer;
         else
-            swashmix[i] = Model.swashmix[i];
+            swashmix[i] = *mixer;
     }
 }
 

@@ -49,9 +49,16 @@ static const char *swashmix_val_cb(guiObject_t *obj, int dir, void *data)
 {
     (void)obj;
     (void)data;
+    u8 *mix;
     int i = (long)data;
-    Model.swashmix[i] = GUI_TextSelectHelper(Model.swashmix[i], 0, 100, dir, 1, 5, NULL);
-    snprintf(tempstring, sizeof(tempstring), "%d", (int)Model.swashmix[i]);
+    switch(i)
+    {
+        case 0: mix = &Model.swash_ailmix; break;
+        case 1: mix = &Model.swash_elemix; break;
+        default: mix = &Model.swash_colmix; break;
+    }
+    *mix = GUI_TextSelectHelper(*mix, 0, 100, dir, 1, 5, NULL);
+    snprintf(tempstring, sizeof(tempstring), "%d", (int)*mix);
     return tempstring;
 }
 

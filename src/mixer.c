@@ -265,9 +265,9 @@ void MIXER_CreateCyclicOutput(volatile s32 *raw, s32 *cyclic)
         cyclic[2] = collective;
     }
     //Normalize for swash setups
-    aileron  = Model.swashmix[0] * aileron / normalize;
-    elevator = Model.swashmix[1] * elevator / normalize;
-    collective = Model.swashmix[2] * collective / normalize;
+    aileron  = Model.swash_ailmix * aileron / normalize;
+    elevator = Model.swash_elemix * elevator / normalize;
+    collective = Model.swash_colmix * collective / normalize;
 
     switch(Model.swash_type) {
     case SWASH_TYPE_NONE:

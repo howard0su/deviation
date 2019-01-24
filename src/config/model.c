@@ -600,9 +600,9 @@ static const struct struct_map _sectrim[] = {
     {TRIM_STEP,   OFFSET(Model.trims[0], step), 1},
 };
 static const struct struct_map _secswash[] = {
-    {SWASH_AILMIX, OFFSET(Model, swashmix[0]), 60},
-    {SWASH_ELEMIX, OFFSET(Model, swashmix[1]), 60},
-    {SWASH_COLMIX, OFFSET(Model, swashmix[2]), 60},
+    {SWASH_AILMIX, OFFSET(Model, swash_ailmix), 60},
+    {SWASH_ELEMIX, OFFSET(Model, swash_elemix), 60},
+    {SWASH_COLMIX, OFFSET(Model, swash_colmix), 60},
 };
 static const struct struct_map _sectimer[] = {
     {TIMER_TIME,     OFFSET(Model.timer[0], timer), 0xFFFF},
@@ -1465,9 +1465,9 @@ static void clear_model(u8 full)
         Model.swash_invert = 0;
     }
     Model.mixer_mode = MIXER_ADVANCED;
-    Model.swashmix[0] = 60;
-    Model.swashmix[1] = 60;
-    Model.swashmix[2] = 60;
+    Model.swash_ailmix = 60;
+    Model.swash_elemix = 60;
+    Model.swash_colmix = 60;
     for(i = 0; i < NUM_MIXERS; i++) {
         Model.mixers[i].scalar = 100;
         MIXER_SET_APPLY_TRIM(&Model.mixers[i], 1);
