@@ -51,7 +51,7 @@ static const char *swashmix_val_cb(guiObject_t *obj, int dir, void *data)
     (void)data;
     u8 *mix;
     int i = (long)data;
-    switch(i)
+    switch (i)
     {
         case 0: mix = &Model.swash_ailmix; break;
         case 1: mix = &Model.swash_elemix; break;
