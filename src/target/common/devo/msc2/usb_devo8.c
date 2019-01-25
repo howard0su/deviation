@@ -24,6 +24,8 @@
 
 #define __IO volatile
 #include "usb_core.h"
+extern void PowerOn();  // cannot include usb_pwr.h here due to type conflict
+extern uint32_t USB_SIL_Init(void);
 #define LE_WORD(x)		((x)&0xFF),((x)>>8)
 
 void USB_Init();
@@ -82,7 +84,15 @@ void USB_Enable(unsigned type, unsigned use_interrupt)
         gpio_set(GPIOB, GPIO10);
     //rcc_set_usbpre(RCC_CFGR_USBPRE_PLL_CLK_DIV1_5);
     rcc_peripheral_enable_clock(&RCC_APB1ENR, RCC_APB1ENR_USBEN);
+
     USB_Init();
+
+    /* Connect the device */
+    PowerOn();
+
+    /* Perform basic device initialization operations */
+    USB_SIL_Init();
+
     if(use_interrupt) {
         nvic_enable_irq(NVIC_USB_LP_CAN_RX0_IRQ);
     }

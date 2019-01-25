@@ -116,17 +116,7 @@ const ONE_DESCRIPTOR HID_String_Descriptor[4] =
 *******************************************************************************/
 void Joystick_init(void)
 {
-
-  /* Update the serial number string descriptor with the data from the unique
-  ID*/
-  Get_SerialNum();
-
   pInformation->Current_Configuration = 0;
-  /* Connect the device */
-  PowerOn();
-
-  /* Perform basic device initialization operations */
-  USB_SIL_Init();
 
   bDeviceState = UNCONNECTED;
 }
@@ -178,6 +168,41 @@ void Joystick_Reset(void)
 
   bDeviceState = ATTACHED;
 }
+
+
+/*******************************************************************************
+* Function Name  : Joystick_GetDescriptorData.
+* Description    : Joystick_GetDescriptorData is used for descriptors transfer.
+*                : This routine is used for the descriptors resident in Flash
+*                  or RAM
+*                  pDesc can be in either Flash or RAM
+*                  The purpose of this routine is to have a versatile way to
+*                  response descriptors request. It allows user to generate
+*                  certain descriptors with software or read descriptors from
+*                  external storage part by part.
+* Input          : - Length - Length of the data in this transfer.
+*                  - pDesc - A pointer points to descriptor struct.
+*                  The structure gives the initial address of the descriptor and
+*                  its original size.
+* Output         : None.
+* Return         : Address of a part of the descriptor pointed by the Usb_
+*                  wOffset The buffer pointed by this address contains at least
+*                  Length bytes.
+*******************************************************************************/
+uint8_t *Joystick_GetDescriptorData(uint16_t Length, ONE_DESCRIPTOR *pDesc)
+{
+  uint32_t  wOffset;
+
+  wOffset = pInformation->Ctrl_Info.Usb_wOffset;
+  if (Length == 0)
+  {
+    pInformation->Ctrl_Info.Usb_wLength = pDesc->Descriptor_Size - wOffset;
+    return 0;
+  }
+
+  return pDesc->Descriptor + wOffset;
+}
+
 /*******************************************************************************
 * Function Name  : Joystick_SetConfiguration.
 * Description    : Update the device state to configured.
@@ -303,7 +328,7 @@ RESULT Joystick_NoData_Setup(uint8_t RequestNo)
 *******************************************************************************/
 uint8_t *Joystick_GetDeviceDescriptor(uint16_t Length)
 {
-  return Standard_GetDescriptorData(Length, &HID_Device_Descriptor);
+  return Joystick_GetDescriptorData(Length, &HID_Device_Descriptor);
 }
 
 /*******************************************************************************
@@ -315,7 +340,7 @@ uint8_t *Joystick_GetDeviceDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *Joystick_GetConfigDescriptor(uint16_t Length)
 {
-  return Standard_GetDescriptorData(Length, &HID_Config_Descriptor);
+  return Joystick_GetDescriptorData(Length, &HID_Config_Descriptor);
 }
 
 /*******************************************************************************
@@ -334,7 +359,7 @@ uint8_t *Joystick_GetStringDescriptor(uint16_t Length)
   }
   else
   {
-    return Standard_GetDescriptorData(Length, &HID_String_Descriptor[wValue0]);
+    return Joystick_GetDescriptorData(Length, &HID_String_Descriptor[wValue0]);
   }
 }
 
@@ -347,7 +372,7 @@ uint8_t *Joystick_GetStringDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *Joystick_GetReportDescriptor(uint16_t Length)
 {
-  return Standard_GetDescriptorData(Length, &Joystick_Report_Descriptor);
+  return Joystick_GetDescriptorData(Length, &Joystick_Report_Descriptor);
 }
 
 /*******************************************************************************
@@ -359,7 +384,7 @@ uint8_t *Joystick_GetReportDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *Joystick_GetHIDDescriptor(uint16_t Length)
 {
-  return Standard_GetDescriptorData(Length, &Mouse_Hid_Descriptor);
+  return Joystick_GetDescriptorData(Length, &Mouse_Hid_Descriptor);
 }
 
 /*******************************************************************************

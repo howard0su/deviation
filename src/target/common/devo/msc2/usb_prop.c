@@ -107,12 +107,6 @@ void MASS_init()
 
   pInformation->Current_Configuration = 0;
 
-  /* Connect the device */
-  PowerOn();
-
-  /* Perform basic device initialization operations */
-  USB_SIL_Init();
-
   bDeviceState = UNCONNECTED;
 }
 
