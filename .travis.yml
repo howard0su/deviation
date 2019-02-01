@@ -30,7 +30,7 @@ stages:
       if: type NOT IN (api, cron) AND NOT commit_message =~ /^Updating translations from Transifex \(Languages:/
       # Do not rebuild if last commit was from Transifex...we already built in the previous commit
 
-
+sudo: false
 
 addons:
   apt:
