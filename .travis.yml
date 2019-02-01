@@ -32,8 +32,6 @@ stages:
 
 
 
-dist: trusty
-
 addons:
   apt:
     update: false
