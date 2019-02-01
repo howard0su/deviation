@@ -31,8 +31,8 @@ void TestAllPages(CuTest* t)
         if (pages[i].pageName == NULL || pages[i].pageName[0] == '\0')
             continue;
 
-        strcpy(testname, pages[i].pageName);
-        for(int j = 0; testname[j] != '\0'; j++) {
+        snprintf(testname, sizeof(testname), "%s", pages[i].pageName);
+        for (int j = 0; testname[j] != '\0'; j++) {
             if (testname[j] == ' ') testname[j] = '_';
             if (testname[j] == '&') testname[j] = '_';
             if (testname[j] == '/') testname[j] = '_';
