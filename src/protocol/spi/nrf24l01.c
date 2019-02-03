@@ -18,6 +18,7 @@
   #pragma long_calls
 #endif
 
+#define USE_OWN_PRINTF 0
 #include "common.h"
 #include "config/tx.h"
 #include "protocol/interface.h"
@@ -61,6 +62,7 @@ void NRF24L01_Initialize()
 
 u8 NRF24L01_WriteReg(u8 reg, u8 data)
 {
+    printf("W: %02x %02x\n", reg, data);
     CS_LO();
     u8 res = PROTOSPI_xfer(W_REGISTER | (REGISTER_MASK & reg));
     PROTOSPI_xfer(data);
@@ -70,30 +72,37 @@ u8 NRF24L01_WriteReg(u8 reg, u8 data)
 
 u8 NRF24L01_WriteRegisterMulti(u8 reg, const u8 data[], u8 length)
 {
+    printf("W: %02x", reg);
     CS_LO();
     u8 res = PROTOSPI_xfer(W_REGISTER | ( REGISTER_MASK & reg));
     for (u8 i = 0; i < length; i++)
     {
+        printf(" %02x", data[i]);
         PROTOSPI_xfer(data[i]);
     }
     CS_HI();
+    printf("\n");
     return res;
 }
 
 u8 NRF24L01_WritePayload(u8 *data, u8 length)
 {
+    printf("W PAYLOAD:");
     CS_LO();
     u8 res = PROTOSPI_xfer(W_TX_PAYLOAD);
     for (u8 i = 0; i < length; i++)
     {
+        printf(" %02x", data[i]);
         PROTOSPI_xfer(data[i]);
     }
     CS_HI();
+    printf("\n");
     return res;
 }
 
 u8 NRF24L01_ReadReg(u8 reg)
 {
+    printf("R: %02x\n", reg);
     CS_LO();
     PROTOSPI_xfer(R_REGISTER | (REGISTER_MASK & reg));
     u8 data = PROTOSPI_xfer(0xFF);
@@ -103,25 +112,31 @@ u8 NRF24L01_ReadReg(u8 reg)
 
 u8 NRF24L01_ReadRegisterMulti(u8 reg, u8 data[], u8 length)
 {
+    printf("R: %02x", reg);
     CS_LO();
     u8 res = PROTOSPI_xfer(R_REGISTER | (REGISTER_MASK & reg));
     for(u8 i = 0; i < length; i++)
     {
         data[i] = PROTOSPI_xfer(0xFF);
+        printf(" %02x", data[i]);
     }
     CS_HI();
+    printf("\n");
     return res;
 }
 
 u8 NRF24L01_ReadPayload(u8 *data, u8 length)
 {
+    printf("R PAYLOAD:");
     CS_LO();
     u8 res = PROTOSPI_xfer(R_RX_PAYLOAD);
     for(u8 i = 0; i < length; i++)
     {
         data[i] = PROTOSPI_xfer(0xFF);
+        printf(" %02x", data[i]);
     }
     CS_HI();
+    printf("\n");
     return res;
 }
 
@@ -129,6 +144,7 @@ static u8 Strobe(u8 state)
 {
     CS_LO();
     u8 res = PROTOSPI_xfer(state);
+    printf("S: %02x\n", state);
     CS_HI();
     return res;
 }

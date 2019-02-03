@@ -43,11 +43,11 @@
 
 static u8 packet[LOLI_PACKET_SIZE];
 static u8 phase;
-static u8 tx_power;
+//static u8 tx_power;
 static u8 hopping_frequency[LOLI_NUM_CHANNELS];
 static u8 rx_tx_addr[5];
 static u8 hopping_frequency_no;
-static u8 binding_count;
+static u8 binding_count = 100;
 static const u8 bind_address[5] = {'L', 'O', 'V', 'E', '!'};
 
 enum{
@@ -55,7 +55,8 @@ enum{
     BIND2,
     BIND3,
     DATA1,
-    DATA2
+    DATA2,
+    DATA3
 };
 
 // Bit vector from bit position
@@ -64,19 +65,15 @@ enum{
 static void init_RF()
 {
     NRF24L01_Initialize();
-    NRF24L01_FlushTx();
-    NRF24L01_FlushRx();
-    NRF24L01_WriteReg(NRF24L01_07_STATUS, 0x70);     // Clear data ready, data sent, and retransmit
-    NRF24L01_WriteReg(NRF24L01_01_EN_AA, 0x00);      // No Auto Acknowldgement on all data pipes
-    NRF24L01_WriteReg(NRF24L01_02_EN_RXADDR, 0x01);  // enable rx data pipe 0
-    NRF24L01_WriteReg(NRF24L01_04_SETUP_RETR, 0x00);    // No retransmit
-    NRF24L01_WriteReg(NRF24L01_05_RF_CH, 66);   // start frequency
-    NRF24L01_WriteReg(NRF24L01_11_RX_PW_P0, LOLI_PACKET_SIZE);  // RX FIFO size
-    NRF24L01_SetBitrate(NRF24L01_BR_250K);
-    tx_power = Model.tx_power;
-    NRF24L01_SetPower(tx_power);
-    NRF24L01_SetTxRxMode(TX_EN);
-    NRF24L01_WriteReg(NRF24L01_00_CONFIG, 0x0a);  // 8bit CRC, TX
+
+    NRF24L01_WriteReg(NRF24L01_07_STATUS, 0x20);
+    NRF24L01_WriteReg(NRF24L01_01_EN_AA, 0x00);
+    NRF24L01_WriteReg(NRF24L01_02_EN_RXADDR, 0x01);
+    NRF24L01_WriteReg(NRF24L01_04_SETUP_RETR, 0x00);
+    NRF24L01_WriteReg(NRF24L01_00_CONFIG, 0x0a);
+    NRF24L01_WriteReg(NRF24L01_05_RF_CH, 0x42);
+    NRF24L01_WriteReg(NRF24L01_06_RF_SETUP, 0x27);
+    NRF24L01_WriteReg(NRF24L01_11_RX_PW_P0, LOLI_PACKET_SIZE);
 }
 
 #define CHAN_RANGE (CHAN_MAX_VALUE - CHAN_MIN_VALUE)
@@ -125,20 +122,21 @@ static void send_packet(u8 bind)
         val = scale_channel(7, 0, 1023);
         packet[9]|= val >> 8;
         packet[10]= val & 0xff;
-        if (++hopping_frequency_no > LOLI_NUM_CHANNELS-1)
-            hopping_frequency_no = 0;
         NRF24L01_WriteReg(NRF24L01_05_RF_CH, hopping_frequency[hopping_frequency_no]);
+        hopping_frequency_no = (hopping_frequency_no + 1) % LOLI_NUM_CHANNELS;
     }
 
-    NRF24L01_WriteReg(NRF24L01_07_STATUS, 0x70);
-    NRF24L01_FlushTx();
+//    NRF24L01_WriteReg(NRF24L01_07_STATUS, 0x70);
+//    NRF24L01_FlushTx();
     NRF24L01_WritePayload(packet, LOLI_PACKET_SIZE);
 
+#if 0
     // Keep transmit power updated
     if (tx_power != Model.tx_power) {
         tx_power = Model.tx_power;
         NRF24L01_SetPower(tx_power);
     }
+#endif
 }
 
 static void update_telemetry()
@@ -156,22 +154,17 @@ static u16 LOLI_callback()
     u16 delay = 0;
     switch (phase) {
         case BIND1:
-            NRF24L01_SetTxRxMode(TXRX_OFF);
-            NRF24L01_SetTxRxMode(TX_EN);
             NRF24L01_WriteReg(NRF24L01_00_CONFIG, 0x0a);  // 8bit CRC, TX
             // send bind packet
             send_packet(1);
             phase = BIND2;
-            delay = 800;
+            delay = 1000;
             break;
         case BIND2:
             // switch to RX mode
-            NRF24L01_SetTxRxMode(TXRX_OFF);
-            NRF24L01_FlushRx();
-            NRF24L01_SetTxRxMode(RX_EN);
             NRF24L01_WriteReg(NRF24L01_00_CONFIG, 0x3b);  // 8bit CRC, RX
             phase = BIND3;
-            binding_count = 0;
+            delay = 1000;
             break;
         case BIND3:
             // got bind response ?
@@ -181,41 +174,41 @@ static u16 LOLI_callback()
                     NRF24L01_WriteRegisterMulti(NRF24L01_0A_RX_ADDR_P0, rx_tx_addr, 5);
                     NRF24L01_WriteRegisterMulti(NRF24L01_10_TX_ADDR, rx_tx_addr, 5);
                     PROTOCOL_SetBindState(0);
-                    NRF24L01_WriteReg(NRF24L01_07_STATUS, 0x70);
-                    NRF24L01_FlushRx();
+                    NRF24L01_WriteReg(NRF24L01_07_STATUS, 0x40);
                     phase = DATA1;
                     break;
                 }
             }
             binding_count++;
-            if (binding_count > 50) {
+            if (binding_count > 20) {
                 phase = BIND1;
+                binding_count = 0;
             } else {
                 delay = 1000;
             }
             break;
         case DATA1:
+            // send data packet
+            send_packet(0);
+            phase = DATA2;
+            delay = 1000;
+            break;
+        case DATA2:
+            // switch to RX
+            NRF24L01_WriteReg(NRF24L01_00_CONFIG, 0x3b);  // 8bit CRC, TX
+            phase = DATA3;
+            delay = 2000;
+            break;
+        case DATA3:
             // got a telemetry packet ?
             if (NRF24L01_ReadReg(NRF24L01_07_STATUS) & BV(NRF24L01_07_RX_DR)) {  // RX fifo data ready
                 NRF24L01_ReadPayload(packet, LOLI_PACKET_SIZE);
                 update_telemetry();
             }
-            NRF24L01_SetTxRxMode(TXRX_OFF);
-            NRF24L01_SetTxRxMode(TX_EN);
-            NRF24L01_WriteReg(NRF24L01_00_CONFIG, 0x0a);  // 8bit CRC, TX
-            // send data packet
-            send_packet(0);
-            phase = DATA2;
-            delay = 2000;
-            break;
-        case DATA2:
             // switch to RX mode
-            NRF24L01_SetTxRxMode(TXRX_OFF);
-            NRF24L01_FlushRx();
-            NRF24L01_SetTxRxMode(RX_EN);
-            NRF24L01_WriteReg(NRF24L01_00_CONFIG, 0x3b);  // 8bit CRC, RX
+            NRF24L01_WriteReg(NRF24L01_00_CONFIG, 0x0a);  // 8bit CRC, TX
             phase = DATA1;
-            delay = 18000;
+            delay = 16500;
             break;
     }
     return delay;
@@ -237,7 +230,7 @@ static void init_txid()
     }
     // Pump zero bytes for LFSR to diverge more
     for (u8 i = 0; i < sizeof(lfsr); ++i) rand32_r(&lfsr, 0);
-
+#if 0
     // tx id
     rx_tx_addr[0] = (lfsr >> 24) & 0xFF;
     rx_tx_addr[1] = ((lfsr >> 16) & 0xFF) % 0x30;
@@ -251,6 +244,19 @@ static void init_txid()
         rand32_r(&lfsr, 0);
         hopping_frequency[i] = (lfsr & 0xff) % 84;  // 2400-2483 MHz
     }
+#endif
+    rx_tx_addr[0] = 0x08;
+    rx_tx_addr[1] = 0x08;
+    rx_tx_addr[2] = 0x08;
+    rx_tx_addr[3] = 0x08;
+    rx_tx_addr[4] = 0x08;
+
+    hopping_frequency[0] = 0;
+    hopping_frequency[1] = 0;
+    hopping_frequency[2] = 0;
+    hopping_frequency[3] = 0x76;
+    hopping_frequency[4] = 0x3A;
+
 }
 
 static void initialize(u8 bind)
@@ -261,12 +267,14 @@ static void initialize(u8 bind)
     if (bind) {
         phase = BIND1;
         NRF24L01_WriteReg(NRF24L01_05_RF_CH, LOLI_BIND_CHANNEL);
-        NRF24L01_WriteRegisterMulti(NRF24L01_0A_RX_ADDR_P0, bind_address, 5);
+        NRF24L01_WriteReg(NRF24L01_06_RF_SETUP, 0x21);
+        NRF24L01_WriteReg(NRF24L01_11_RX_PW_P0, 0x0B);
         NRF24L01_WriteRegisterMulti(NRF24L01_10_TX_ADDR, bind_address, 5);
+        NRF24L01_WriteRegisterMulti(NRF24L01_0A_RX_ADDR_P0, bind_address, 5);
         PROTOCOL_SetBindState(0xFFFFFFFF);
     } else {
-        NRF24L01_WriteRegisterMulti(NRF24L01_0A_RX_ADDR_P0, rx_tx_addr, 5);
         NRF24L01_WriteRegisterMulti(NRF24L01_10_TX_ADDR, rx_tx_addr, 5);
+        NRF24L01_WriteRegisterMulti(NRF24L01_0A_RX_ADDR_P0, rx_tx_addr, 5);
         phase = DATA1;
     }
     CLOCK_StartTimer(500, LOLI_callback);
