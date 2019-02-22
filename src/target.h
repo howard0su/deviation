@@ -56,7 +56,11 @@ enum Radio {
 #ifdef USE_PBM_IMAGE
     #define IMG_EXT  ".pbm"
 #else
+#ifdef USE_GIF_IMAGE
+    #define IMG_EXT  ".gif"
+#else
     #define IMG_EXT  ".bmp"
+#endif
 #endif
 
 #define SWITCH_ADDRESS 0xFFFFFFFF

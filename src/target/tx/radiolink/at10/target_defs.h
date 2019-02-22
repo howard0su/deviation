@@ -11,7 +11,6 @@
     #define SPIFLASH_TYPE IS25CQxxx
 #else
     #define SPIFLASH_SECTORS 64
-    #define USE_PBM_IMAGE 1
     #define USE_DEVOFS 1  // Must be before common_devo include
 #endif
 
