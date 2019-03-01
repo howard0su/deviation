@@ -18,6 +18,8 @@
 #define PWR_ENABLE_PIN NULL_PIN
 #define PWR_SWITCH_PIN NULL_PIN
 
+#define RADIOLINK_CC2530_RESET_PIN ((struct mcu_pin){GPIOB, GPIO11})
+
 #define PROTO_SPI ((struct spi_csn) { \
     .spi = SPI2,                      \
     .csn = {GPIOB, GPIO12},           \

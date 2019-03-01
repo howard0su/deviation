@@ -20,4 +20,6 @@
 #define USE_4BUTTON_MODE    1
 #define HAS_HARD_POWER_OFF  1
 
+#define PROTO_HAS_RADIOLINK_CC2530 1
+
 #include "hardware.h"

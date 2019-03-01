@@ -87,7 +87,7 @@ static void RADIOLINK_Initialize()
 {
     PROTO_CS_HI(RADIOLINK_CC2530);
     PROTOSPI_pin_clear(RADIOLINK_CC2530_RESET_PIN);
-    msleep(100);
+    _msleep(100);
     PROTOSPI_pin_set(RADIOLINK_CC2530_RESET_PIN);
 }
 
